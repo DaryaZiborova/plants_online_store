@@ -2,7 +2,7 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    overflow-x: hidden; /* Убираем горизонтальную прокрутку */
+    overflow-x: hidden; 
 }
 
 header {
@@ -11,24 +11,24 @@ header {
     padding: 10px;
     display: flex;
     align-items: center;
-    border-bottom: none; /* Убедимся, что нет нижней границы */
+    border-bottom: none; 
 }
 
 .main-navigation {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 10px; /* Отступ между элементами */
-    border: none; /* Убедимся, что нет границ */
+    gap: 10px; 
+    border: none; 
 }
 
 .main-navigation .search-form {
     display: flex;
     align-items: center;
     flex-grow: 1;
-    margin-right: 20px; /* Отступ между поиском и кнопками */
-    position: relative; /* Для позиционирования автодополнения */
-    border: none; /* Убедимся, что нет границ */
+    margin-right: 20px; 
+    position: relative; 
+    border: none; 
 }
 
 .main-navigation .search-form input[type="text"] {
@@ -54,8 +54,8 @@ header {
 
 .nav-buttons {
     display: flex;
-    gap: 10px; /* Отступ между кнопками */
-    border: none; /* Убедимся, что нет границ */
+    gap: 10px; 
+    border: none; 
 }
 
 .nav-buttons a {
@@ -73,14 +73,14 @@ header {
 .container {
     display: flex;
     width: 100%;
-    border: none; /* Убедимся, что нет границ */
+    border: none; 
 }
 
 .sidebar {
     width: 200px;
     background: #f4f4f4;
     padding: 20px;
-    border: none; /* Убедимся, что нет границ */
+    border: none; 
 }
 
 .sidebar h3 {
@@ -105,7 +105,7 @@ header {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
-    border: none; /* Убедимся, что нет границ */
+    border: none; 
 }
 
 .product {
@@ -151,16 +151,16 @@ button:hover {
     max-height: 150px;
     overflow-y: auto;
     z-index: 1000;
-    width: 100%; /* Ширина равна ширине поля поиска */
-    top: 100%; /* Располагаем под полем поиска */
+    width: 100%; 
+    top: 100%; 
     left: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для красоты */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
 #autocomplete-results div {
     padding: 8px;
     cursor: pointer;
-    color: black; /* Черный цвет текста */
+    color: black; 
 }
 
 #autocomplete-results div:hover {

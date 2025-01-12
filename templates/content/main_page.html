@@ -9,14 +9,14 @@
 <body>
     <header>
         <nav class="main-navigation">
-            <!-- Форма поиска -->
+            <!-- Форма пошуку -->
             <form method="get" action="{% url 'main_page' %}" class="search-form">
                 <input type="text" id="search" name="search" placeholder="Пошук за назвою..." value="{{ request.GET.search }}">
                 <button type="submit">Пошук</button>
-                <div id="autocomplete-results"></div> <!-- Контейнер для подсказок -->
+                <div id="autocomplete-results"></div> 
             </form>
 
-            <!-- Кнопки "Кошик" и "Увійти" -->
+            <!-- Кнопки "Кошик" та "Увійти" -->
             <div class="nav-buttons">
                 <a href="#">Кошик</a>
                 <a href="#">Увійти</a>
@@ -63,7 +63,7 @@
                 {% else %}
                     <div class="empty-frame"></div>
                 {% endif %}
-                <!-- Ссылка на страницу растения -->
+                <!-- Посилання на сторінку рослини -->
                 <h4><a href="{% url 'plant_detail' plant.plant_id %}">{{ plant.plant_name }}</a></h4>
                 <p>{{ plant.price }} грн</p>
                 <!-- Кнопки -->
@@ -77,27 +77,27 @@
     <script>
         document.getElementById('search').addEventListener('input', function() {
             const query = this.value;
-            console.log("Input event triggered. Query:", query);  // Отладка
-            if (query.length > 2) {  // Начинаем поиск только если введено более 2 символов
+            console.log("Подія введення спрацювала. Запит:", query);  
+            if (query.length > 2) {  
                 fetch(`/autocomplete/?query=${encodeURIComponent(query)}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log("Autocomplete data:", data);  // Отладка
+                        console.log("Дані автозаповнення:", data);  
                         const resultsContainer = document.getElementById('autocomplete-results');
-                        resultsContainer.innerHTML = '';  // Очищаем предыдущие результаты
+                        resultsContainer.innerHTML = '';  // Очищаємо попередні результати
                         data.forEach(plant => {
                             const div = document.createElement('div');
                             div.textContent = plant.plant_name;
                             div.addEventListener('click', () => {
                                 document.getElementById('search').value = plant.plant_name;
-                                resultsContainer.innerHTML = '';  // Очищаем результаты после выбора
+                                resultsContainer.innerHTML = '';  // Очищаємо результати після вибору
                             });
                             resultsContainer.appendChild(div);
                         });
                     })
-                    .catch(error => console.error("Error fetching autocomplete data:", error));  // Отладка
+                    .catch(error => console.error("Помилка отримання даних автозаповнення:", error));  
             } else {
-                document.getElementById('autocomplete-results').innerHTML = '';  // Очищаем результаты если запрос слишком короткий
+                document.getElementById('autocomplete-results').innerHTML = '';  // Очищаємо результати, якщо запит занадто короткий
             }
         });
     </script>

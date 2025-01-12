@@ -16,7 +16,7 @@
     </header>
     <div class="container">
         <main class="plant-detail">
-            <!-- Фото растения -->
+            <!-- Фото рослини -->
             <div class="plant-photo">
                 {% if plant.photo %}
                     <img src="{% static 'plants/' %}{{ plant.photo }}" alt="{{ plant.plant_name }}">
@@ -25,17 +25,17 @@
                 {% endif %}
             </div>
 
-            <!-- Информация о растении -->
+            <!-- Інформація про рослину -->
             <div class="plant-info">
                 <h1>{{ plant.plant_name }}</h1>
                 <p><strong>Опис:</strong> {{ plant.plant_description }}</p>
                 <p><strong>Кількість у наявності:</strong> {{ plant.quantity_in_stock }}</p>
-                <p><strong>Поставник:</strong> {{ supplier.supplier_name }}, {{ supplier.country }}</p>
+                <p><strong>Постачальник:</strong> {{ supplier.supplier_name }}, {{ supplier.country }}</p>
                 <p><strong>Рід:</strong> {{ genus.genus_name }}</p>
                 <p><strong>Вага:</strong> {{ plant.weight }} кг</p>
                 <p><strong>Ціна:</strong> {{ plant.price }} грн</p>
 
-                <!-- Форма для выбора количества -->
+                <!-- Форма для вибору кількості -->
                 <form action="#" method="post">
                     {% csrf_token %}
                     <label for="quantity">Кількість:</label>
@@ -50,10 +50,10 @@
         </main>
     </div>
 
-    <!-- Скрипт для расчета общей стоимости -->
+    <!-- Скрипт для розрахунку загальної вартості -->
     <script>
-        // Получаем цену из атрибута data-price
-        const price = parseFloat("{{ plant.price }}".replace(",", "."));  // Заменяем запятую на точку для корректного парсинга
+        // Отримуємо ціну з атрибута data-price
+        const price = parseFloat("{{ plant.price }}".replace(",", "."));  // Замінюємо кому на крапку для коректного парсингу
         const quantityInput = document.getElementById('quantity');
         const totalPriceElement = document.getElementById('total-price');
 
