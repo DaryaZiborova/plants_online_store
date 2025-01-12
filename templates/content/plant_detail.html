@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="uk">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>{{ plant.plant_name }}</title>
+    <link rel="stylesheet" href="{% static 'content/style.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="main-navigation">
+            <a href="{% url 'main_page' %}">На головну</a>
+            <a href="#">Кошик</a>
+            <a href="#">Увійти</a>
+        </nav>
+    </header>
+    <div class="container">
+        <main class="plant-detail">
+            <!-- Фото растения -->
+            <div class="plant-photo">
+                {% if plant.photo %}
+                    <img src="{% static 'plants/' %}{{ plant.photo }}" alt="{{ plant.plant_name }}">
+                {% else %}
+                    <div class="empty-frame"></div>
+                {% endif %}
+            </div>
+
+            <!-- Информация о растении -->
+            <div class="plant-info">
+                <h1>{{ plant.plant_name }}</h1>
+                <p><strong>Опис:</strong> {{ plant.plant_description }}</p>
+                <p><strong>Кількість у наявності:</strong> {{ plant.quantity_in_stock }}</p>
+                <p><strong>Поставник:</strong> {{ supplier.supplier_name }}, {{ supplier.country }}</p>
+                <p><strong>Рід:</strong> {{ genus.genus_name }}</p>
+                <p><strong>Вага:</strong> {{ plant.weight }} кг</p>
+                <p><strong>Ціна:</strong> {{ plant.price }} грн</p>
+
+                <!-- Форма для выбора количества -->
+                <form action="#" method="post">
+                    {% csrf_token %}
+                    <label for="quantity">Кількість:</label>
+                    <input type="number" id="quantity" name="quantity" min="1" max="{{ plant.quantity_in_stock }}" value="1">
+                    <p><strong>Загальна вартість:</strong> <span id="total-price">{{ plant.price }}</span> грн</p>
+
+                    <!-- Кнопки -->
+                    <button type="submit" name="action" value="buy">Купити</button>
+                    <button type="submit" name="action" value="add_to_cart">До кошика</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Скрипт для расчета общей стоимости -->
+    <script>
+        // Получаем цену из атрибута data-price
+        const price = parseFloat("{{ plant.price }}".replace(",", "."));  // Заменяем запятую на точку для корректного парсинга
+        const quantityInput = document.getElementById('quantity');
+        const totalPriceElement = document.getElementById('total-price');
+
+        quantityInput.addEventListener('input', function() {
+            const quantity = parseFloat(this.value);
+            const totalPrice = (price * quantity).toFixed(2);
+            totalPriceElement.textContent = totalPrice;
+        });
+    </script>
+</body>
+</html>

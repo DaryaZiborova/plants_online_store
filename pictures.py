@@ -12,8 +12,7 @@ def add_task(conn, task):
     cur.execute(sql, task)
     conn.commit()
 
-#AIzaSyDmu4TExvvKvxpvbYCc01_z3cMpjQaW7Xs
-#AIzaSyAn7rFcmnlkLmESNcmzBfJR0AurgjdI8js
+# Ключі API для Google Custom Search
 api_key = 'AIzaSyAn7rFcmnlkLmESNcmzBfJR0AurgjdI8js'
 cse_id = 'f376712d180704480'
 
@@ -35,7 +34,7 @@ def get_img_bytes(query):
         if 'image' in content_type:
             return response.content
         else:
-            print(f'запрос {query} вернул html')
+            print(f'Запит {query} повернув HTML')
     return None
 
 con = sqlite3.connect("db.sqlite3")
@@ -49,11 +48,11 @@ for name in names:
             cur.execute("UPDATE content_plant SET photo = ? WHERE plant_name = ?", (get_img_bytes(f'{name[0]} рослина фото без водяного знаку'), name[0]))
             print(name[0])
         except KeyError:
-            print(name[0], '(изображение загрузить не получилось)')
+            print(name[0], '(зображення завантажити не вдалося)')
         except requests.exceptions.ConnectionError:
-            print(name[0], '(изображение загрузить не получилось)')
+            print(name[0], '(зображення завантажити не вдалося)')
         except requests.exceptions.InvalidSchema:
-            print(name[0], '(изображение загрузить не получилось)')
+            print(name[0], '(зображення завантажити не вдалося)')
         finally:
             con.commit()
 

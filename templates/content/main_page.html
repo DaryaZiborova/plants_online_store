@@ -1,41 +1,105 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
+{% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Магазин Семян и Саженцев</title>
-    <link rel="stylesheet" href="/static/content/style.css">
+    <title>Магазин Насіння та Саджанців</title>
+    <link rel="stylesheet" href="{% static 'content/style.css' %}">
 </head>
 <body>
     <header>
-        <div class="logo">
-            <img src="logo.png" alt="AgroMarket Logo">
-        </div>
         <nav class="main-navigation">
-            <input type="text" placeholder="Поиск...">
-            <button>Поиск</button>
-            <a href="#">Корзина</a>
-            <a href="#">Войти</a>
+            <!-- Форма поиска -->
+            <form method="get" action="{% url 'main_page' %}" class="search-form">
+                <input type="text" id="search" name="search" placeholder="Пошук за назвою..." value="{{ request.GET.search }}">
+                <button type="submit">Пошук</button>
+                <div id="autocomplete-results"></div> <!-- Контейнер для подсказок -->
+            </form>
+
+            <!-- Кнопки "Кошик" и "Увійти" -->
+            <div class="nav-buttons">
+                <a href="#">Кошик</a>
+                <a href="#">Увійти</a>
+            </div>
         </nav>
     </header>
     <div class="container">
         <aside class="sidebar">
-            <h3>Категории</h3>
-            <ul>
-                <li><a href="#">Семена овощей</a></li>
-                <li><a href="#">Семена фруктов</a></li>
-                <li><a href="#">Саженцы деревьев</a></li>
-            </ul>
+            <h3>Фільтри</h3>
+            <form method="get" action="{% url 'main_page' %}">
+                <h4>Ціна</h4>
+                <label for="min_price">Мінімальна ціна:</label>
+                <input type="number" id="min_price" name="min_price" value="{{ request.GET.min_price }}">
+                <label for="max_price">Максимальна ціна:</label>
+                <input type="number" id="max_price" name="max_price" value="{{ request.GET.max_price }}">
+
+                <h4>Країна</h4>
+                {% for country in countries %}
+                <div>
+                    <input type="checkbox" id="country_{{ country }}" name="country" value="{{ country }}"
+                        {% if country in request.GET.getlist.country %}checked{% endif %}>
+                    <label for="country_{{ country }}">{{ country }}</label>
+                </div>
+                {% endfor %}
+
+                <h4>Категорії</h4>
+                {% for category in categories %}
+                <div>
+                    <input type="checkbox" id="category_{{ category }}" name="category" value="{{ category }}"
+                        {% if category in request.GET.getlist.category %}checked{% endif %}>
+                    <label for="category_{{ category }}">{{ category }}</label>
+                </div>
+                {% endfor %}
+
+                <button type="submit">Фільтрувати</button>
+            </form>
         </aside>
         <main class="product-list">
-            <!-- Продукты -->
+            <!-- Продукти -->
+            {% for plant in plants %}
             <div class="product">
-                <img src="product1.jpg" alt="Продукт">
-                <h4>Название продукта</h4>
-                <p>Цена</p>
-                <button>Купить</button>
+                {% if plant.photo %}
+                    <img src="{% static 'plants/' %}{{ plant.photo }}" alt="{{ plant.plant_name }}">
+                {% else %}
+                    <div class="empty-frame"></div>
+                {% endif %}
+                <!-- Ссылка на страницу растения -->
+                <h4><a href="{% url 'plant_detail' plant.plant_id %}">{{ plant.plant_name }}</a></h4>
+                <p>{{ plant.price }} грн</p>
+                <!-- Кнопки -->
+                <button>Купити</button>
+                <button class="add-to-cart">До кошика</button>
             </div>
-            <!-- Повторять блок .product для каждого товара -->
+            {% endfor %}
         </main>
     </div>
+
+    <script>
+        document.getElementById('search').addEventListener('input', function() {
+            const query = this.value;
+            console.log("Input event triggered. Query:", query);  // Отладка
+            if (query.length > 2) {  // Начинаем поиск только если введено более 2 символов
+                fetch(`/autocomplete/?query=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Autocomplete data:", data);  // Отладка
+                        const resultsContainer = document.getElementById('autocomplete-results');
+                        resultsContainer.innerHTML = '';  // Очищаем предыдущие результаты
+                        data.forEach(plant => {
+                            const div = document.createElement('div');
+                            div.textContent = plant.plant_name;
+                            div.addEventListener('click', () => {
+                                document.getElementById('search').value = plant.plant_name;
+                                resultsContainer.innerHTML = '';  // Очищаем результаты после выбора
+                            });
+                            resultsContainer.appendChild(div);
+                        });
+                    })
+                    .catch(error => console.error("Error fetching autocomplete data:", error));  // Отладка
+            } else {
+                document.getElementById('autocomplete-results').innerHTML = '';  // Очищаем результаты если запрос слишком короткий
+            }
+        });
+    </script>
 </body>
 </html>

@@ -16,7 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from content import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.main_page, name='main_page'),  # Главная страница
+    path('plant/<int:plant_id>/', views.plant_detail, name='plant_detail'),  # Страница растения
+    path('autocomplete/', views.autocomplete, name='autocomplete'),  # Автодополнение
 ]

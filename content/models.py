@@ -20,8 +20,8 @@ class Plant(models.Model):
     ]
     plant_id = models.AutoField(primary_key=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
-    genus = models.ForeignKey(Plant_genus, on_delete=models.CASCADE) 
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+    genus = models.ForeignKey(Plant_genus, on_delete=models.CASCADE,to_field='plant_genus_id') 
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, to_field='supplier_id')
     plant_name = models.CharField(max_length=100)
     plant_description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
