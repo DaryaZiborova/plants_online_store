@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Кошик</title>
+    <link rel="stylesheet" href="{% static 'orders/cart.css' %}">
+</head>
+<body>
+    <div class="cart-container">
+        <h1>Ваш Кошик</h1>
+
+        {% if cart %}
+        <table class="cart-table">
+            {% for item in cart %}
+            <tr class="cart-item">
+                <td class="plant-info">
+                    {% if item.plant.photo %}
+                    <img class="plant-img" src="{% static 'plants/' %}{{ item.plant.photo }}" alt="{{ item.plant.plant_name }}">
+                    {% else %}
+                    <div class="empty-frame"></div>
+                    {% endif %}
+                    <p class="plant-name">{{ item.plant.plant_name }}</p>
+                    <div class="field">Кількість у наявності: {{ item.plant.quantity_in_stock }}</div>
+                </td>
+                <td class="plant-details">
+                    <div class="field">
+                        <div class="quantity-control">
+                            <form action="{% url 'add_to_cart' item.plant.plant_id -1 %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="quantity-btn">-</button>
+                            </form>
+                            <input type="number" value="{{ item.quantity }}" readonly>
+                            <form action="{% url 'add_to_cart' item.plant.plant_id 1 %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                {% if item.quantity >= item.plant.quantity_in_stock %}
+                                <button type="submit" class="quantity-btn" disabled>+</button>
+                                {% else %}
+                                <button type="submit" class="quantity-btn">+</button>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                    <div class="field total-price">{{ item.total_price }} грн</div>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="cart-total">
+            <p><strong>Загальна сума:</strong> {{ total }} грн</p>
+        </div>
+        {% else %}
+        <p>Ваш кошик порожній!</p>
+        {% endif %}
+    </div>
+</body>
+</html>

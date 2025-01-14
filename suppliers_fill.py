@@ -15,3 +15,5 @@ with sqlite3.connect('db.sqlite3') as conn:
     add_task(conn, ['ІП Ковальчук В.В.', 'Україна', '+380(67)237-92-03'])
 
 conn.close()
+
+print(41676%62)

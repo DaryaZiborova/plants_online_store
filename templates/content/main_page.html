@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="uk">
 {% load static %}
+{% load filters %}
 <head>
     <meta charset="UTF-8">
     <title>Магазин Насіння та Саджанців</title>
@@ -18,8 +19,8 @@
 
             <!-- Кнопки "Кошик" та "Увійти" -->
             <div class="nav-buttons">
-                <a href="#">Кошик</a>
-                <a href="#">Увійти</a>
+                <a href="{% url 'cart' %}">Кошик</a>
+                <a href="{% url 'login' %}">Увійти</a>
             </div>
         </nav>
     </header>
@@ -67,8 +68,38 @@
                 <h4><a href="{% url 'plant_detail' plant.plant_id %}">{{ plant.plant_name }}</a></h4>
                 <p>{{ plant.price }} грн</p>
                 <!-- Кнопки -->
-                <button>Купити</button>
-                <button class="add-to-cart">До кошика</button>
+                <div class="product-control">
+                    {% if plant.quantity_in_stock > 0 %}
+                        <button class="add-to-cart">Купити</button>
+                    {% endif %}
+
+                    {% if plant.plant_id in cart_items %}
+                    <div class="quantity-control">
+                        <form action="{% url 'add_to_cart' plant.plant_id -1 %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="quantity-btn">-</button>
+                        </form>
+                        <input type="number" value="{{cart_items|get:plant.plant_id}}" readonly>
+                        <form action="{% url 'add_to_cart' plant.plant_id 1 %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            {% if cart_items|get:plant.plant_id >= plant.quantity_in_stock %}
+                                <button type="submit" class="quantity-btn" disabled>+</button>
+                            {% else %}
+                                <button type="submit" class="quantity-btn">+</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                    {% else %}
+                        {% if plant.quantity_in_stock > 0 %}
+                        <form action="{% url 'add_to_cart' plant.plant_id 1 %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="add-to-cart">До кошика</button>
+                        </form>
+                        {% else %}
+                            <button class="add-to-cart" disabled>Товару немає в наявності</button>
+                        {% endif %}
+                    {% endif %}
+                </div>
             </div>
             {% endfor %}
         </main>
@@ -100,6 +131,19 @@
                 document.getElementById('autocomplete-results').innerHTML = '';  // Очищаємо результати, якщо запит занадто короткий
             }
         });
+        function increment(button) {
+                const input = button.previousElementSibling;
+                input.value = parseInt(input.value) + 1;
+                updatePrice(button.parentElement);
+            }
+    
+        function decrement(button) {
+            const input = button.nextElementSibling;
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+                updatePrice(button.parentElement);
+            }
+        }
     </script>
 </body>
 </html>

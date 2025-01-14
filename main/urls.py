@@ -16,11 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from content import views
+from content import views 
+from authentication import views as auth_views
+from orders import views as ord_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.main_page, name='main_page'),  # Головна сторінка
     path('plant/<int:plant_id>/', views.plant_detail, name='plant_detail'),  # Сторінка рослин
     path('autocomplete/', views.autocomplete, name='autocomplete'), 
+    path('register/', auth_views.register_view, name='register'),
+    path('login/', auth_views.login_by_email, name='login'),
+    path('add-to-cart/<int:plant_id>/<slug:q>', ord_views.add_to_cart, name='add_to_cart'),
+    path('cart/', ord_views.cart_view, name='cart')
 ]

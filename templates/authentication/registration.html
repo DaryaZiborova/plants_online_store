@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'authentication/style.css' %}">
+    <title>Реєстрація</title>
+</head>
+<body>
+    <div class="header">
+        <h3>Реєстрація</h3>
+    </div>
+    <div class="account-options">
+        <b class="account-label">Вже є акаунт?</b>
+        <div class="link-container">
+            <a href="{% url 'login' %}" class="login-link">Увійти за допомогою email</a>
+        </div>
+    </div>
+    <form action='.' method='POST' class="form-container">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-submit">Зареєструватися</button>
+    </form>
+</body>
+</html>
