@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from content.models import Plant, Supplier, Plant_genus
 from orders.models import CartItem
 
@@ -34,8 +35,11 @@ def main_page(request):
     if selected_categories:
         plants = plants.filter(category__in=selected_categories)
 
-    user_cart_items = CartItem.objects.filter(user=request.user).values_list('plant_id', 'items_quantity')
-    cart_items_dict = {item[0]: item[1] for item in user_cart_items}
+    # Отримуємо елементи кошика для авторизованого користувача
+    cart_items_dict = {}
+    if request.user.is_authenticated:
+        user_cart_items = CartItem.objects.filter(user=request.user).values_list('plant_id', 'items_quantity')
+        cart_items_dict = {item[0]: item[1] for item in user_cart_items}
 
     # Передаємо дані у шаблон
     context = {
@@ -43,7 +47,8 @@ def main_page(request):
         'countries': countries,
         'categories': categories,
         'selected_category': request.GET.get('category'),
-        'cart_items': cart_items_dict
+        'cart_items': cart_items_dict,
+        'username': request.user.username if request.user.is_authenticated else None,  # Додаємо username до контексту
     }
     
     return render(request, 'content/main_page.html', context)

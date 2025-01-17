@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages  # Додано для повідомлень
 from .forms import RegisterForm, LoginByEmailForm
 from django.contrib.auth import authenticate, login, logout
 from .models import User
 
-# Create your views here.
-
+# Реєстрація користувача
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -22,13 +22,14 @@ def register_view(request):
             )
             if user:
                 login(request, user) 
+                messages.success(request, 'Ви успішно зареєструвалися та увійшли в систему.')  # Повідомлення про успішну реєстрацію
                 return redirect('main_page')
     else:
         form = RegisterForm()
 
     return render(request, 'authentication/registration.html', {'form': form})
 
-
+# Вхід в систему через email
 def login_by_email(request):
     if request.method == 'POST':
         form = LoginByEmailForm(request.POST)
@@ -41,9 +42,10 @@ def login_by_email(request):
                 form.add_error('email', 'Користувача з введеною електронною поштою не існує')
                 return render(request, 'authentication/login.html', {'form': form})
 
-            user = authenticate(request, username=user.username, password=password)
+            user = authenticate(request, email=email, password=password)
             if user:
                 login(request, user)
+                messages.success(request, 'Ви успішно увійшли в систему.')  # Повідомлення про успішний вхід
                 return redirect('main_page')
             else:
                 form.add_error('password', 'Невірний пароль')
@@ -52,7 +54,31 @@ def login_by_email(request):
 
     return render(request, 'authentication/login.html', {'form': form})
 
-
+# Вихід з системи
 def logout_view(request):
     logout(request)
-    return redirect('register')
+    return redirect('main_page')  # Перенаправлення на головну сторінку
+
+# Сторінка користувача
+
+def user_profile(request):
+    user = request.user  # Отримуємо поточного авторизованого користувача
+    return render(request, 'authentication/user_profile.html', {'user': user})
+
+def edit_profile(request):
+    user = request.user  # Отримуємо поточного користувача
+
+    if request.method == 'POST':
+        # Оновлення даних користувача
+        user.username = request.POST.get('username')
+        user.city = request.POST.get('city')
+        user.street = request.POST.get('street')
+        user.house = request.POST.get('house')
+        user.flat = request.POST.get('flat')
+        user.phone_number = request.POST.get('phone_number')
+        user.save()  # Зберігаємо зміни
+
+        messages.success(request, 'Профіль успішно оновлено.')
+        return redirect('user_profile')
+
+    return render(request, 'authentication/edit_profile.html', {'user': user})

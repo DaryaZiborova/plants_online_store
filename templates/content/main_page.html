@@ -20,7 +20,12 @@
             <!-- Кнопки "Кошик" та "Увійти" -->
             <div class="nav-buttons">
                 <a href="{% url 'cart' %}">Кошик</a>
-                <a href="{% url 'login' %}">Увійти</a>
+                {% if username %}
+                    <a href="{% url 'user_profile' %}" class="username">{{ username }}</a>
+                    <a href="{% url 'logout' %}">Вийти</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Увійти</a>
+                {% endif %}
             </div>
         </nav>
     </header>

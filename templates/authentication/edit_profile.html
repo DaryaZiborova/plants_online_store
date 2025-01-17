@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Редагування профілю</title>
+    <link rel="stylesheet" href="{% static 'authentication/edit_profile.css' %}"> 
+</head>
+<body>
+    <header>
+        <nav class="main-navigation">
+            <a href="{% url 'main_page' %}">Головна</a>
+            <a href="{% url 'cart' %}">Кошик</a>
+            {% if user.is_authenticated %}
+                <span class="username">{{ user.username }}</span>
+                <a href="{% url 'logout' %}">Вийти</a>
+            {% else %}
+                <a href="{% url 'login' %}">Увійти</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Редагування профілю: {{ user.username }}</h1>
+        <form method="post" action="{% url 'edit_profile' %}">
+            {% csrf_token %}
+            <div class="user-info">
+                <p><strong>Нікнейм:</strong> <input type="text" name="username" value="{{ user.username }}"></p>
+                <p><strong>Місто:</strong> <input type="text" name="city" value="{{ user.city }}"></p>
+                <p><strong>Вулиця:</strong> <input type="text" name="street" value="{{ user.street }}"></p>
+                <p><strong>Будинок:</strong> <input type="text" name="house" value="{{ user.house }}"></p>
+                <p><strong>Поверх:</strong> <input type="text" name="flat" value="{{ user.flat }}"></p>
+                <p><strong>Номер телефону:</strong> <input type="text" name="phone_number" value="{{ user.phone_number }}"></p>
+            </div>
+            <button type="submit" class="button">Зберегти зміни</button>
+        </form>
+    </div>
+</body>
+</html>

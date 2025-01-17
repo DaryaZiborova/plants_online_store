@@ -1,20 +1,23 @@
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages  # Додано для повідомлень
 from django.contrib.auth.decorators import login_required
 from .models import CartItem
 from content.models import Plant
 
-# Create your views here.
-
-@login_required
+# Додавання товару до кошика
 def add_to_cart(request, plant_id, q):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб додати товар до кошика.')
+        return redirect('login')  # Перенаправлення на сторінку входу
+
     q = int(q)
-    
     plant = get_object_or_404(Plant, plant_id=plant_id)
     cart_item, created = CartItem.objects.get_or_create(
         user=request.user,
         plant=plant,
         defaults={"items_quantity": q},
     )
+
     if q > 0:
         if cart_item.items_quantity > plant.quantity_in_stock:
             cart_item.items_quantity = plant.quantity_in_stock
@@ -32,8 +35,12 @@ def add_to_cart(request, plant_id, q):
 
     return redirect(request.META.get('HTTP_REFERER'))
 
-@login_required
+# Перегляд кошика
 def cart_view(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб переглянути кошик.')
+        return redirect('login')  # Перенаправлення на сторінку входу
+
     cart_items = CartItem.objects.filter(user=request.user)
     user_cart = [
         {
