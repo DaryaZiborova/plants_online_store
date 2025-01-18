@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from content.models import Plant, Supplier, Plant_genus
 from orders.models import CartItem
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def main_page(request):
     plants = Plant.objects.all()  
@@ -34,6 +35,15 @@ def main_page(request):
     selected_categories = request.GET.getlist('category')
     if selected_categories:
         plants = plants.filter(category__in=selected_categories)
+
+    paginator = Paginator(plants, 30)
+    page = request.GET.get('p')
+    try:
+        plants = paginator.page(page)
+    except PageNotAnInteger:
+        plants = paginator.page(1)
+    except EmptyPage:
+        plants = paginator.page(paginator.num_pages)
 
     # Отримуємо елементи кошика для авторизованого користувача
     cart_items_dict = {}

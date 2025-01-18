@@ -19,10 +19,10 @@
 
             <!-- Кнопки "Кошик" та "Увійти" -->
             <div class="nav-buttons">
-                <a href="{% url 'cart' %}">Кошик</a>
                 {% if username %}
-                    <a href="{% url 'user_profile' %}" class="username">{{ username }}</a>
-                    <a href="{% url 'logout' %}">Вийти</a>
+                    <a href="{% url 'cart' %}">Кошик</a>
+                    <a href="{% url 'user_profile' %}">Профіль</a>
+                    <a href="{% url 'logout' %}" id="logout-btn">Вийти</a>
                 {% else %}
                     <a href="{% url 'login' %}">Увійти</a>
                 {% endif %}
@@ -31,13 +31,13 @@
     </header>
     <div class="container">
         <aside class="sidebar">
-            <h3>Фільтри</h3>
+            <h1 id="filters-label">Фільтри</h1>
             <form method="get" action="{% url 'main_page' %}">
                 <h4>Ціна</h4>
                 <label for="min_price">Мінімальна ціна:</label>
-                <input type="number" id="min_price" name="min_price" value="{{ request.GET.min_price }}">
+                <input type="number" class="price-input" id="min-price" value="{{ request.GET.min_price }}">
                 <label for="max_price">Максимальна ціна:</label>
-                <input type="number" id="max_price" name="max_price" value="{{ request.GET.max_price }}">
+                <input type="number" class="price-input" value="{{ request.GET.max_price }}">
 
                 <h4>Країна</h4>
                 {% for country in countries %}
@@ -57,7 +57,7 @@
                 </div>
                 {% endfor %}
 
-                <button type="submit">Фільтрувати</button>
+                <button type="submit" id="filter-btn">Фільтрувати</button>
             </form>
         </aside>
         <main class="product-list">
@@ -108,6 +108,27 @@
             </div>
             {% endfor %}
         </main>
+    </div>
+    <div class="pagination">
+        {% if plants.has_previous %}
+            <a href="?p={{ plants.previous_page_number }}" class="pagination-link">&larr; Попередня</a>
+        {% else %}
+            <span class="pagination-disabled">&larr; Попередня</span>
+        {% endif %}
+    
+        {% for num in plants.paginator.page_range %}
+            {% if num == plants.number %}
+                <span class="pagination-current">{{ num }}</span>
+            {% else %}
+                <a href="?p={{ num }}" class="pagination-link">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+    
+        {% if plants.has_next %}
+            <a href="?p={{ plants.next_page_number }}" class="pagination-link">Наступна &rarr;</a>
+        {% else %}
+            <span class="pagination-disabled">Наступна &rarr;</span>
+        {% endif %}
     </div>
 
     <script>
