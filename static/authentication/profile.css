@@ -16,25 +16,6 @@ header {
     border-bottom: none;
 }
 
-.main-navigation {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.main-navigation a {
-    padding: 8px 12px;
-    background-color: #28a745;
-    color: white;
-    text-decoration: none;
-    border-radius: 3px;
-}
-
-.main-navigation a:hover {
-    background-color: #218838;
-}
-
 .container {
     display: flex;
     flex-direction: column;
@@ -43,7 +24,8 @@ header {
 }
 
 h1 {
-    color: #4CAF50;
+    text-align: center;
+    color: #333;
     margin-bottom: 20px;
 }
 
@@ -52,8 +34,7 @@ h1 {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    width: 100%;
+    width: 30%;
 }
 
 .user-info p {
@@ -65,18 +46,66 @@ h1 {
     color: #4CAF50;
 }
 
+
+.user-info input {
+    width: 70%;
+    display: flex;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+}
 /* Стилі для кнопок */
-.button {
-    display: inline-block;
-    padding: 10px 20px;
+.button, #logout-btn {
+    font-size: 14px;
+    text-align: center;
+    justify-content: center;
+    margin: auto;
+    width: 140px;
+    display: flex;
+    padding: 12px 10px;
     background-color: #4CAF50;
     color: white;
     text-decoration: none;
     border-radius: 3px;
-    text-align: center;
-    margin-top: 20px;
+    margin-top: 30px;
+    border: none;
+    cursor: pointer;
 }
 
 .button:hover {
     background-color: #45a049;
 }
+
+.nav-buttons {
+    margin-left: auto;
+    display: flex;
+    align-items: center; /* Вирівнюємо всі елементи по центру вертикально */
+    gap: 10px; 
+    border: none; 
+}
+
+.nav-buttons a {
+    width: 90px;
+    text-align: center;
+    padding: 8px 10px;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+    border: 1px dashed #ffffff; 
+    color: white;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+}
+.nav-buttons a:hover{
+    background-color: #45a049;
+}
+#logout-btn{
+    background-color: #ff5252;
+    margin-top: 5px;
+}
+#logout-btn:hover{
+    background-color: #da4747;
+}
+

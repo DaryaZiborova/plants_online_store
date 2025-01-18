@@ -8,20 +8,14 @@
 </head>
 <body>
     <header>
-        <nav class="main-navigation">
-            <a href="{% url 'main_page' %}">Головна</a>
+        <div class="nav-buttons">
             <a href="{% url 'cart' %}">Кошик</a>
-            {% if user.is_authenticated %}
-                <span class="username">{{ user.username }}</span>
-                <a href="{% url 'logout' %}">Вийти</a>
-            {% else %}
-                <a href="{% url 'login' %}">Увійти</a>
-            {% endif %}
-        </nav>
+            <a href="{% url 'main_page' %}">На головну</a>
+        </div>
     </header>
 
     <div class="container">
-        <h1>Профіль користувача: {{ user.username }}</h1>
+        <h1>Ваш Профіль</h1>
         <div class="user-info">
             <p><strong>Нікнейм:</strong> {{ user.username }}</p>
             <p><strong>Місто:</strong> {{ user.city }}</p>
@@ -29,8 +23,9 @@
             <p><strong>Будинок:</strong> {{ user.house }}</p>
             <p><strong>Поверх:</strong> {{ user.flat }}</p>
             <p><strong>Номер телефону:</strong> {{ user.phone_number }}</p>
+            <a href="{% url 'edit_profile' %}" class="button">Редагувати профіль</a>
+            <a href="{% url 'logout' %}" id="logout-btn">Вийти</a>
         </div>
-        <a href="{% url 'edit_profile' %}" class="button">Редагувати профіль</a>
     </div>
 </body>
 </html>

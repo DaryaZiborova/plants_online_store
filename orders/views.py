@@ -8,7 +8,7 @@ from content.models import Plant
 def add_to_cart(request, plant_id, q):
     if not request.user.is_authenticated:
         messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб додати товар до кошика.')
-        return redirect('login')  # Перенаправлення на сторінку входу
+        return redirect(request.META.get('HTTP_REFERER')) 
 
     q = int(q)
     plant = get_object_or_404(Plant, plant_id=plant_id)
