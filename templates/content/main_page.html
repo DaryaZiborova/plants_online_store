@@ -64,13 +64,15 @@
             <!-- Продукти -->
             {% for plant in plants %}
             <div class="product">
-                {% if plant.photo %}
-                    <img src="{% static 'plants/' %}{{ plant.photo }}" alt="{{ plant.plant_name }}">
-                {% else %}
-                    <div class="empty-frame"></div>
-                {% endif %}
+                <div class="photo-container">
+                    {% if plant.photo %}
+                        <img src="{% static 'plants/' %}{{ plant.photo }}" alt="{{ plant.plant_name }}" class="plant-photo">
+                    {% else %}
+                        <img src="{% static 'content/placeholder.jpg' %}" alt="{{ plant.plant_name }}" class="plant-photo">
+                    {% endif %}
+                </div>
                 <!-- Посилання на сторінку рослини -->
-                <h4><a href="{% url 'plant_detail' plant.plant_id %}">{{ plant.plant_name }}</a></h4>
+                <h4><a href="{% url 'plant_detail' plant.plant_id %}" class="plant-link">{{ plant.plant_name }}</a></h4>
                 <p>{{ plant.price }} грн</p>
                 <!-- Кнопки -->
                 <div class="product-control">
