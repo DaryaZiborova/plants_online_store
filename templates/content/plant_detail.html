@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="uk">
 {% load static %}
+{% load filters %}
 <head>
     <meta charset="UTF-8">
     <title>{{ plant.plant_name }}</title>
-    <link rel="stylesheet" href="{% static 'content/style.css' %}">
+    <link rel="stylesheet" href="{% static 'content/plant_detail.css' %}">
 </head>
 <body>
     <header>
@@ -19,39 +20,65 @@
             </div>
     </header>
     <div class="container">
-        <main class="plant-detail">
+        <div class="plant-detail">
+            <h1>{{ plant.plant_name }}</h1>
             <!-- Фото рослини -->
-            <div class="plant-photo">
-                {% if plant.photo %}
-                    <img src="{% static 'plants/' %}{{ plant.photo }}" alt="{{ plant.plant_name }}">
-                {% else %}
-                    <div class="empty-frame"></div>
-                {% endif %}
-            </div>
+            {% if plant.photo %}
+            <img src="{% static 'plants/' %}{{ plant.photo }}" alt="{{ plant.plant_name }}" class="plant-photo">
+            {% else %}
+            <img src="{% static 'content/placeholder.jpg' %}" alt="{{ plant.plant_name }}" class="plant-photo">
+            {% endif %}
 
-            <!-- Інформація про рослину -->
-            <div class="plant-info">
-                <h1>{{ plant.plant_name }}</h1>
-                <p><strong>Опис:</strong> {{ plant.plant_description }}</p>
-                <p><strong>Кількість у наявності:</strong> {{ plant.quantity_in_stock }}</p>
-                <p><strong>Постачальник:</strong> {{ supplier.supplier_name }}, {{ supplier.country }}</p>
-                <p><strong>Рід:</strong> {{ genus.genus_name }}</p>
-                <p><strong>Вага:</strong> {{ plant.weight }} кг</p>
-                <p><strong>Ціна:</strong> {{ plant.price }} грн</p>
-
+        <!-- Інформація про рослину -->
+            <p class="plant-price">{{ plant.price }} грн</p>
+            <p class="plant-description">{{ plant.plant_description }}</p>
+            <p class="plant-info">
+                <strong>Постачальник:</strong> {{ supplier.supplier_name }}, {{ supplier.country }}
+            </p>
+            <p class="plant-info">
+                <strong>Рід:</strong> {{ genus.genus_name }}
+            </p>
+            <p class="plant-info">
+                <strong>Вага:</strong> {{ plant.weight|kilo_to_grams }} г (1 шт.)
+            </p>
                 <!-- Форма для вибору кількості -->
-                <form action="#" method="post">
-                    {% csrf_token %}
-                    <label for="quantity">Кількість:</label>
-                    <input type="number" id="quantity" name="quantity" min="1" max="{{ plant.quantity_in_stock }}" value="1">
-                    <p><strong>Загальна вартість:</strong> <span id="total-price">{{ plant.price }}</span> грн</p>
+                <div class="product-control">
+                    {% if plant.quantity_in_stock > 0 %}
+                        <form class="button-form">
+                            <button class="add-to-cart" type="submit">Купити</button>
+                        </form>
+                    {% endif %}
 
-                    <!-- Кнопки -->
-                    <button type="submit" name="action" value="buy">Купити</button>
-                    <button type="submit" name="action" value="add_to_cart">До кошика</button>
-                </form>
-            </div>
-        </main>
+                    {% if plant.plant_id in cart_items %}
+                    <div class="quantity-control">
+                        <form action="{% url 'add_to_cart' plant.plant_id -1 %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="quantity-btn">-</button>
+                        </form>
+                        <input type="number" value="{{cart_items|get:plant.plant_id}}" readonly>
+                        <form action="{% url 'add_to_cart' plant.plant_id 1 %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            {% if cart_items|get:plant.plant_id >= plant.quantity_in_stock %}
+                                <button type="submit" class="quantity-btn" disabled>+</button>
+                            {% else %}
+                                <button type="submit" class="quantity-btn">+</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                    {% else %}
+                        {% if plant.quantity_in_stock > 0 %}
+                        <form action="{% url 'add_to_cart' plant.plant_id 1 %}" method="POST" class="button-form">
+                            {% csrf_token %}
+                            <button type="submit" class="add-to-cart">До кошика</button>
+                        </form>
+                        {% else %}
+                            <button class="add-to-cart" disabled>Товару немає в наявності</button>
+                        {% endif %}
+                    {% endif %}
+                    
+                </div>
+                <p class="quantity">У наявності: {{ plant.quantity_in_stock }} шт.</p>
+        </div>
     </div>
 
     <!-- Скрипт для розрахунку загальної вартості -->

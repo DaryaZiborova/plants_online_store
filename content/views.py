@@ -58,7 +58,6 @@ def main_page(request):
         'categories': categories,
         'selected_category': request.GET.get('category'),
         'cart_items': cart_items_dict,
-        'username': request.user.username if request.user.is_authenticated else None,  # Додаємо username до контексту
     }
     
     return render(request, 'content/main_page.html', context)
@@ -89,11 +88,17 @@ def plant_detail(request, plant_id):
                 messages.success(request, f"Додано {quantity} шт. {plant.plant_name} до кошика.")
                 return redirect('main_page')
 
+    cart_items_dict = {}
+    if request.user.is_authenticated:
+        user_cart_items = CartItem.objects.filter(user=request.user).values_list('plant_id', 'items_quantity')
+        cart_items_dict = {item[0]: item[1] for item in user_cart_items}
+
     # Передаємо дані у шаблон
     context = {
         'plant': plant,
         'supplier': supplier,
         'genus': genus,
+        'cart_items': cart_items_dict,
     }
     
     return render(request, 'content/plant_detail.html', context)
