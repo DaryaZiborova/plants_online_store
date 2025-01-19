@@ -12,10 +12,10 @@ class User(AbstractUser):
     name = models.CharField(max_length=255, null=True, blank=True)
     surname = models.CharField(max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
-    city = models.CharField(max_length=255, null=False, blank=False)
-    street = models.CharField(max_length=255, null=False, blank=False)
-    house = models.CharField(max_length=255, null=False, blank=False)
-    flat = models.CharField(max_length=255, null=False, blank=False)
+    city = models.CharField(max_length=255, null=False, default="", blank=False)
+    street = models.CharField(max_length=255, null=False, default="", blank=False)
+    house = models.CharField(max_length=255, null=False, default="", blank=False)
+    flat = models.CharField(max_length=255, null=False, default="", blank=False)
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['password', 'username']

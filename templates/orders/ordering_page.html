@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uk">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Оформлення замовлення</title>
+    <link rel="stylesheet" href="{% static 'orders/ordering_page.css' %}">
+</head>
+<body>
+    <div class="ordering-container">
+        <h1>Оформлення замовлення</h1>
+        <form method="post" action="{% url 'place_order' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="order_city">Місто:</label>
+                <input type="text" id="order_city" name="order_city" required>
+            </div>
+            <div class="form-group">
+                <label for="order_street">Вулиця:</label>
+                <input type="text" id="order_street" name="order_street" required>
+            </div>
+            <div class="form-group">
+                <label for="order_house">Будинок:</label>
+                <input type="text" id="order_house" name="order_house" required>
+            </div>
+            <div class="form-group">
+                <label for="order_flat">Квартира:</label>
+                <input type="text" id="order_flat" name="order_flat" required>
+            </div>
+            <div class="form-group">
+                <label for="payment_method">Спосіб оплати:</label>
+                <select id="payment_method" name="payment_method" required>
+                    <option value="Передоплата">Передоплата</option>
+                    <option value="При отриманні">При отриманні</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-submit">Підтвердити замовлення</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif; /* Звичайний шрифт, як на інших сторінках */
+    background-color: #f9f9f9;
+}
+
+.ordering-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif; /* Звичайний шрифт для заголовка */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-family: Arial, sans-serif; /* Звичайний шрифт для міток */
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: Arial, sans-serif; /* Звичайний шрифт для полів введення */
+}
+
+.btn-submit {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    font-family: Arial, sans-serif; /* Звичайний шрифт для кнопки */
+}
+
+.btn-submit:hover {
+    background-color: #45a049;
+}

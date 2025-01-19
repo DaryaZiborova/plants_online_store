@@ -49,6 +49,12 @@
         <div class="cart-total">
             <p><strong>Загальна сума:</strong> {{ total }} грн</p>
         </div>
+
+        <!-- Кнопка "Оформити замовлення" -->
+        <div class="checkout-button">
+            <a href="{% url 'ordering_page' %}" class="btn-checkout">Оформити замовлення</a>
+        </div>
+
         {% else %}
         <p>Ваш кошик порожній!</p>
         {% endif %}
