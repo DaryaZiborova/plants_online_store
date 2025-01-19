@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uk">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Мої замовлення</title>
+    <link rel="stylesheet" href="{% static 'orders/orders.css' %}">
+</head>
+<body>
+
+    <div class="orders-container">
+        <h1>Мої замовлення</h1>
+    
+        {% if orders %}
+            {% for order in orders %}
+                <div class="order-block">
+                    <div class="order-header">
+                        <h2>Замовлення №{{ order.order_id }}</h2>
+                        <p class="order-date">Дата: {{ order.order_date }}</p>
+                    </div>
+                    <div class="order-details">
+                        <p><strong>Спосіб оплати:</strong> {{ order.payment_method }}</p>
+                        <p><strong>Адреса доставки:</strong> {{ order.order_city }}, {{ order.order_street }}, {{ order.order_house }}, кв. {{ order.order_flat }}</p>
+                        <p><strong>Статус замовлення:</strong> {{ order.get_status_display }}</p> <!-- Додано статус -->
+                    </div>
+                    <div class="order-items">
+                        <h3>Товари:</h3>
+                        <ul>
+                            {% for item in order.items.all %}
+                                <li>
+                                    <div class="item-info">
+                                        {% if item.plant.photo %}
+                                            <img class="plant-img" src="{% static 'plants/' %}{{ item.plant.photo }}" alt="{{ item.plant.plant_name }}">
+                                        {% else %}
+                                            <div class="empty-frame"></div>
+                                        {% endif %}
+                                        <span class="item-name">{{ item.plant.plant_name }}</span>
+                                    </div>
+                                    <span class="item-quantity">{{ item.quantity }} шт.</span>
+                                    <span class="item-price">{{ item.price }} грн/шт.</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <p class="order-total"><strong>Сума:</strong> {{ order.total_price }} грн</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>У вас немає замовлень.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

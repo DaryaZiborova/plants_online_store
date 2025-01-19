@@ -21,6 +21,7 @@
             <div class="nav-buttons">
                 {% if user.is_authenticated %}
                     <a href="{% url 'cart' %}">Кошик</a>
+                    <a href="{% url 'orders' %}">Мої замовлення</a>
                     <a href="{% url 'user_profile' %}">Профіль</a>
                 {% else %}
                     <a href="{% url 'login' %}">Увійти</a>

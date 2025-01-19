@@ -34,4 +34,7 @@ urlpatterns = [
     path('cart/', ord_views.cart_view, name='cart'),
     path('user/', auth_views.user_profile, name='user_profile'),  # Сторінка користувача
     path('user/edit/', auth_views.edit_profile, name='edit_profile'),
+    path('ordering/', ord_views.ordering_page, name='ordering_page'),  # Сторінка оформлення замовлення
+    path('place_order/', ord_views.place_order, name='place_order'),  # Обробка замовлення
+    path('orders/', ord_views.orders_view, name='orders'),  # Сторінка "Мої замовлення"
 ]
