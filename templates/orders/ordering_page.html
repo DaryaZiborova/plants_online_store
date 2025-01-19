@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Оформлення замовлення</title>
-    <link rel="stylesheet" href="{% static 'orders/ordering_page.css' %}">
+    <link rel="stylesheet" href="{% static 'orders/orders.css' %}">
 </head>
 <body>
     <div class="ordering-container">
@@ -33,6 +33,26 @@
                     <option value="Передоплата">Передоплата</option>
                     <option value="При отриманні">При отриманні</option>
                 </select>
+            </div>
+            <div class="order-items">
+                <h3>Товари:</h3>
+                <ul>
+                    {% for item in cart_items %}
+                        <li>
+                            <div class="item-info">
+                                {% if item.plant.photo %}
+                                    <img class="plant-img" src="{% static 'plants/' %}{{ item.plant.photo }}" alt="{{ item.plant.plant_name }}">
+                                {% else %}
+                                    <div class="empty-frame"></div>
+                                {% endif %}
+                                <span class="item-name">{{ item.plant.plant_name }}</span>
+                            </div>
+                            <span class="item-quantity">{{ item.items_quantity }} шт.</span>
+                            <span class="item-price">{{ item.plant.price }} грн</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <p class="order-total"><strong>Загальна сума:</strong> {{ total }} грн</p>
             </div>
             <button type="submit" class="btn-submit">Підтвердити замовлення</button>
         </form>

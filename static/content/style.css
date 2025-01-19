@@ -62,7 +62,7 @@ header {
 }
 
 .nav-buttons a {
-    width: 70px;
+    width: 80px;
     text-align: center;
     padding: 8px 12px;
     transition: background-color 0.3s ease;

@@ -20,7 +20,7 @@
                     {% else %}
                     <div class="empty-frame"></div>
                     {% endif %}
-                    <p class="plant-name">{{ item.plant.plant_name }}</p>
+                    <a href="{% url 'plant_detail' item.plant.plant_id %}" class="plant-name">{{ item.plant.plant_name }}</a>
                     <div class="field">Кількість у наявності: {{ item.plant.quantity_in_stock }}</div>
                 </td>
                 <td class="plant-details">

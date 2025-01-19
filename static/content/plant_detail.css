@@ -123,6 +123,9 @@ input[type="number"]::-webkit-outer-spin-button {
     display: inline;
     width: 14%
 }
+.disabled-button-form{
+    width: 27%
+}
 .add-to-cart {
     text-align: center;
     border-radius: 5px;
@@ -160,6 +163,7 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 30px 160px 0 30px;
     padding: 20px 30px 20px 30px;
     line-height: 1.5;
+    border: dashed #45a049 1px;
 }
 
 .plant-info {

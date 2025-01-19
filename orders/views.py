@@ -66,7 +66,7 @@ def ordering_page(request):
     # Розраховуємо загальну суму замовлення
     total = sum(item.items_quantity * item.plant.price for item in cart_items)
 
-    return render(request, 'orders/ordering_page.html', {'total': total})
+    return render(request, 'orders/ordering_page.html', {'total': total, "cart_items": cart_items})
 
 def place_order(request):
     if request.method == 'POST':

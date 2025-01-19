@@ -49,7 +49,7 @@ h1 {
 }
 
 .plant-name {
-    padding: 10px 0 10px 0;
+    text-decoration: none;
     font-size: 16px;
     font-weight: bold;
     color: #333;
@@ -71,6 +71,7 @@ h1 {
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    margin-top: 5px;
 }
 
 .quantity-control {
@@ -108,6 +109,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .price, .total-price {
     font-weight: bold;
     color: #333;
+    width: 90px;
 }
 
 .plant-img {
@@ -129,6 +131,7 @@ input[type="number"]::-webkit-outer-spin-button {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 auto;
 }
 
 .quantity-btn:disabled {
@@ -147,7 +150,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .checkout-button {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 20px;
 }
 
 .btn-checkout {

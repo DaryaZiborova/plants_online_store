@@ -72,7 +72,9 @@
                             <button type="submit" class="add-to-cart">До кошика</button>
                         </form>
                         {% else %}
+                        <form class="disabled-button-form">
                             <button class="add-to-cart" disabled>Товару немає в наявності</button>
+                        </form>
                         {% endif %}
                     {% endif %}
                     

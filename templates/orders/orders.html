@@ -3,13 +3,13 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Мої замовлення</title>
+    <title>Замовлення</title>
     <link rel="stylesheet" href="{% static 'orders/orders.css' %}">
 </head>
 <body>
 
     <div class="orders-container">
-        <h1>Мої замовлення</h1>
+        <h1>Ваши замовлення</h1>
     
         {% if orders %}
             {% for order in orders %}
@@ -41,7 +41,7 @@
                                 </li>
                             {% endfor %}
                         </ul>
-                        <p class="order-total"><strong>Сума:</strong> {{ order.total_price }} грн</p>
+                        <p class="order-total"><strong>Загальна сума:</strong> {{ order.total_price }} грн</p>
                     </div>
                 </div>
             {% endfor %}
