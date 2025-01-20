@@ -4,8 +4,11 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from content.models import Plant, Supplier, Plant_genus
+from authentication.models import User
 from orders.models import CartItem
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponseForbidden
 
 def main_page(request):
     plants = Plant.objects.all()  
@@ -111,3 +114,21 @@ def autocomplete(request):
     else:
         results = []
     return JsonResponse(results, safe=False)
+
+@user_passes_test(lambda u: u.is_staff)
+def user_rights(request):
+    if request.method == 'POST':
+        users = User.objects.all()
+        for user in users:
+            checkbox_name = f"user_{user.user_id}"
+            if user != request.user:
+                if checkbox_name in request.POST:
+                    user.is_staff = True
+                else:
+                    user.is_staff = False
+                user.save()
+        messages.success(request, 'Зміни успішно збережено!')
+        return redirect('user_rights')
+
+    users = User.objects.all()
+    return render(request, 'content/admin_management.html', {'users': users})

@@ -26,7 +26,13 @@
                 {% else %}
                     <a href="{% url 'login' %}">Увійти</a>
                 {% endif %}
+                {% if user.is_staff %}
+            
             </div>
+            <a href="{% url 'user_rights' %}" id="admin-tools-link">
+                <img src="{% static 'content/admin_tools.png' %}" id="admin-tools">
+            </a>
+            {% endif %}
         </nav>
     </header>
     <div class="container">

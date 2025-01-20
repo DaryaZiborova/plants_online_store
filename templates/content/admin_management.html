@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="uk">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управління правами користувачей</title>
+    <link rel="stylesheet" href="{% static 'content/admin_management.css' %}">
+</head>
+<body>
+    <div class="container">
+        <form action="{% url 'user_rights' %}" method="POST">
+            {% csrf_token %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Адміністратор</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.email }}</td>
+                        <td class="admin-column">
+                            <input type="checkbox" name="user_{{ user.user_id }}" {% if user.is_staff %}checked{% endif %} {% if user == request.user %}disabled{% endif %}>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="save-btn">Зберегти зміни</button>
+        </form>
+    </div>
+</body>
+</html>
