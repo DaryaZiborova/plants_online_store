@@ -77,7 +77,7 @@
                 <!-- Кнопки -->
                 <div class="product-control">
                     {% if plant.quantity_in_stock > 0 %}
-                        <button class="add-to-cart">Купити</button>
+                    <a href="{% url 'ordering_page' %}?plant_id={{ plant.plant_id }}&buy_now=true" class="add-to-cart">Купити</a>
                     {% endif %}
 
                     {% if plant.plant_id in cart_items %}

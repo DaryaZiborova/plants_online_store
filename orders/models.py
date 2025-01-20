@@ -38,9 +38,6 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.order_id} by {self.user.email}"
 
-    def __str__(self):
-        return f"Order #{self.order_id} by {self.user.email}"
-
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')  # Зв'язок з замовленням
