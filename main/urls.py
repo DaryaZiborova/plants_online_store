@@ -37,4 +37,5 @@ urlpatterns = [
     path('ordering/', ord_views.ordering_page, name='ordering_page'),  # Сторінка оформлення замовлення
     path('place_order/', ord_views.place_order, name='place_order'),  # Обробка замовлення
     path('orders/', ord_views.orders_view, name='orders'),  # Сторінка "Мої замовлення"
+    path('manage-user-rights', views.user_rights, name='user_rights')
 ]
