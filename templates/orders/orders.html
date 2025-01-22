@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'orders/orders.css' %}">
 </head>
 <body>
-
+    <a href="{% url 'main_page' %}" class="to-main-page">&larr;  На головну</a>
     <div class="orders-container">
         <h1>Ваши замовлення</h1>
     
@@ -34,10 +34,10 @@
                                         {% else %}
                                             <div class="empty-frame"></div>
                                         {% endif %}
-                                        <span class="item-name">{{ item.plant.plant_name }}</span>
+                                        <a href="{% url 'plant_detail' item.plant.plant_id %}" class="item-name">{{ item.plant.plant_name }}</a>
                                     </div>
                                     <span class="item-quantity">{{ item.quantity }} шт.</span>
-                                    <span class="item-price">{{ item.price }} грн/шт.</span>
+                                    <span class="item-price">{{ item.price }} грн</span>
                                 </li>
                             {% endfor %}
                         </ul>

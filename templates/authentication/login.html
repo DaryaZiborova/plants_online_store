@@ -18,7 +18,8 @@
             <a href="{% url 'register' %}" class="login-link">Зареєструватися</a>
         </div>
     </div>
-    <form action='.' method='POST' class="form-container">{% csrf_token %}
+    <form action='.' method='POST' class="form-container">
+        {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn-submit">Увійти</button>
     </form>

@@ -92,7 +92,7 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-.quantity-control button {
+.quantity-btn {
     background-color: #4CAF50;
     width: 28px;
     color: white;
@@ -102,11 +102,12 @@ input[type="number"]::-webkit-outer-spin-button {
     cursor: pointer;
 }
 
-.quantity-control button:hover {
+.quantity-btn:hover {
     background-color: #45a049;
 }
 
-.price, .total-price {
+.total-price {
+    text-align: center;
     font-weight: bold;
     color: #333;
     width: 90px;
@@ -167,4 +168,38 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .btn-checkout:hover {
     background-color: #45a049;
+}
+.to-main-page {
+    position: absolute;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    background-color: #ffffff;
+    padding: 0 0 0 20px;
+    border-radius: 4px;
+    font-size: 18px;
+}
+
+.to-main-page:hover {
+    text-decoration: underline #555;
+}
+.delete-cart-item {
+    background-color: transparent; 
+    border: none; 
+    padding: 0; 
+    margin: 0;
+    cursor: pointer; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+
+#delete {
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    justify-content: center;
+    align-items: center;
+    margin: auto 0 auto 0;
 }

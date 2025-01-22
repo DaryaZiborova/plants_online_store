@@ -2,13 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from content.models import Plant, Supplier, Plant_genus
 from authentication.models import User
 from orders.models import CartItem
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.decorators import user_passes_test
-from django.http import HttpResponseForbidden
+import os
+from django.core.files.storage import default_storage
 
 def main_page(request):
     plants = Plant.objects.all()  
@@ -132,3 +132,44 @@ def user_rights(request):
 
     users = User.objects.all()
     return render(request, 'content/admin_management.html', {'users': users})
+
+@user_passes_test(lambda u: u.is_staff)
+def edit_plant(request, plant_id):
+    plant = get_object_or_404(Plant, plant_id=plant_id)
+    
+    if request.method == 'POST':
+        plant.category = request.POST.get('category')
+        plant.genus_id = request.POST.get('genus')  
+        plant.supplier_id = request.POST.get('supplier') 
+        plant.plant_name = request.POST.get('plant_name')
+        plant.plant_description = request.POST.get('plant_description')
+        plant.price = request.POST.get('price')
+        plant.quantity_in_stock = request.POST.get('quantity_in_stock')
+        plant.weight = request.POST.get('weight')
+
+        if request.POST.get('photo_is_deleted') == 'false':
+            if 'photo' in request.FILES:
+                photo = request.FILES['photo']
+                extension = os.path.splitext(photo.name)[1] 
+                photo_name = f"{plant.genus_id}_{plant.plant_id}{extension}"
+                photo_path = os.path.join('plants', photo_name)
+                
+                if plant.photo:  
+                    if default_storage.exists(f'plants/{plant.photo}'):
+                        default_storage.delete(f'plants/{plant.photo}')
+                default_storage.save(photo_path, photo)
+                plant.photo = photo_name
+        else:
+            if plant.photo:  
+                if default_storage.exists(f'plants/{plant.photo}'):
+                    default_storage.delete(f'plants/{plant.photo}')
+            plant.photo = photo_name
+
+        plant.save()
+        return redirect('plant_detail', plant_id=plant_id)
+    context = {
+               'plant': plant,
+               'genuses': Plant_genus.objects.all(),
+               'suppliers': Supplier.objects.all(),
+               }
+    return render(request, 'content/edit_plant.html', context)

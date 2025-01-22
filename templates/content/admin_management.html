@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="{% static 'content/admin_management.css' %}">
 </head>
 <body>
+    <header>
+        <div class="nav-buttons">
+            <a href="{% url 'main_page' %}">На головну</a>
+        </div>
+    </header>
     <div class="container">
         <form action="{% url 'user_rights' %}" method="POST">
             {% csrf_token %}
@@ -31,6 +36,7 @@
             </table>
             <button type="submit" class="save-btn">Зберегти зміни</button>
         </form>
+        <a href="{% url 'user_rights' %}" class="btn-back">&larr; Скасувати</a>
     </div>
 </body>
 </html>

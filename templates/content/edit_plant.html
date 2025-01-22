@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uk">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редагувати рослину</title>
+    <link rel="stylesheet" href="{% static 'content/edit_plant.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{plant.plant_name}}</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="category">Категорія:</label>
+            <select id="category" name="category">
+                {% for value, label in plant.CATEGORY_CHOICES %}
+                    <option value="{{ value }}" {% if plant.category == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <label for="genus">Рід:</label>
+            <select id="genus" name="genus">
+                {% for genus in genuses %}
+                    <option value="{{ genus.plant_genus_id }}" {% if plant.genus_id == genus.plant_genus_id %}selected{% endif %}>{{ genus.genus_name }}</option>
+                {% endfor %}
+            </select>
+            <label for="supplier">Постачальник:</label>
+            <select id="supplier" name="supplier">
+                {% for supplier in suppliers %}
+                    <option value="{{ supplier.supplier_id }}" {% if plant.supplier_id == supplier.supplier_id %}selected{% endif %}>{{ supplier.supplier_name }}</option>
+                {% endfor %}
+            </select>
+            <label for="plant_name">Назва рослини:</label>
+            <input type="text" id="plant_name" name="plant_name" value="{{ plant.plant_name }}">
+            <label for="plant_description">Опис:</label>
+            <textarea id="plant_description" name="plant_description" rows="4">{{ plant.plant_description }}</textarea>
+            <label for="price">Ціна:</label>
+            <input type="number" id="price" name="price" value="{{ plant.price }}" step="0.01" min="0.01">
+            <label for="quantity_in_stock">Кількість у наявності:</label>
+            <input type="number" id="quantity_in_stock" name="quantity_in_stock" value="{{ plant.quantity_in_stock }}" min="0">
+            <label for="weight">Вага (кг):</label>
+            <input type="number" id="weight" name="weight" value="{{ plant.weight }}" step="0.01" min="0.01">
+            <label >Фото:</label>
+            <div class="image-upload">
+                {% if plant.photo %}
+                    <label for="photo" class="image-container">
+                        <img id="preview" src="{% static 'plants/' %}{{ plant.photo }}" alt="{{ plant.plant_name }}" class="plant-photo">
+                        <div class="overlay">Завантажити фото</div>
+                    </label>
+                {% else %}
+                    <label for="photo" class="image-container">
+                        <img id="preview" src="{% static 'content/placeholder.jpg' %}" class="plant-photo">
+                        <div  class="overlay">Завантажити фото</div>
+                    </label>
+                {% endif %}
+                <input type="file" id="photo" name="photo" accept="image/*" style="display: none;">
+                <img id="delete" src="{% static 'content/delete.png' %}">
+            </div>
+            <input type="hidden" id="photo_is_deleted" name="photo_is_deleted" value="false">
+            <button type="submit" class="btn-submit">Зберегти зміни</button>
+        </form>
+        <a href="{% url 'plant_detail' plant.plant_id %}" class="btn-back">&larr; Скасувати</a>
+    </div>
+</body>
+</html>
+<script>
+    const hiddenInput = document.getElementById('photo_is_deleted');
+    // Додаємо слухача подій до поля вибору файлів
+    document.getElementById('photo').addEventListener('change', function(event) {
+        const fileInput = event.target;
+        // Перевіряємо, чи файл був вибраний
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader(); 
+            // Встановлюємо джерело зображення у вибраний файл
+            reader.onload = function(e) {
+                previewImage.src = e.target.result; // Встановлюємо src для попереднього перегляду
+            };
+            // Читаємо файл у форматі Data URL
+            reader.readAsDataURL(fileInput.files[0]);
+            hiddenInput.value = 'false';
+        }
+    });
+    
+    const deleteButton = document.getElementById('delete');
+    const previewImage = document.getElementById('preview');
+    const file = document.getElementById('photo');
+
+    deleteButton.addEventListener('click', function () {
+        previewImage.src = "{% static 'content/placeholder.jpg' %}";
+        file.value = null;
+        hiddenInput.value = 'true';
+    });
+    
+</script>

@@ -16,11 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.contrib.auth import views as auth_views 
+from django.contrib.auth import views as auth_views0 
 from content import views 
 from authentication import views as auth_views
 from orders import views as ord_views
-from authentication.views import edit_profile  
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,7 +28,7 @@ urlpatterns = [
     path('autocomplete/', views.autocomplete, name='autocomplete'), 
     path('register/', auth_views.register_view, name='register'),
     path('login/', auth_views.login_by_email, name='login'),
-    path('logout/', auth_views.logout_view, name='logout'),  # Перенаправлення на головну сторінку
+    path('logout/', auth_views.logout_view, name='logout'),  
     path('add-to-cart/<int:plant_id>/<slug:q>', ord_views.add_to_cart, name='add_to_cart'),
     path('cart/', ord_views.cart_view, name='cart'),
     path('user/', auth_views.user_profile, name='user_profile'),  # Сторінка користувача
@@ -37,5 +36,6 @@ urlpatterns = [
     path('ordering/', ord_views.ordering_page, name='ordering_page'),  # Сторінка оформлення замовлення
     path('place_order/', ord_views.place_order, name='place_order'),  # Обробка замовлення
     path('orders/', ord_views.orders_view, name='orders'),  # Сторінка "Мої замовлення"
-    path('manage-user-rights', views.user_rights, name='user_rights')
+    path('manage-user-rights', views.user_rights, name='user_rights'),
+    path('plant/<int:plant_id>/edit', views.edit_plant, name='edit_plant'),
 ]

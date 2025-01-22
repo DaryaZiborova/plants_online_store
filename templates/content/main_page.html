@@ -16,23 +16,21 @@
                 <button type="submit">Пошук</button>
                 <div id="autocomplete-results"></div> 
             </form>
-
-            <!-- Кнопки "Кошик" та "Увійти" -->
-            <div class="nav-buttons">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'cart' %}">Кошик</a>
-                    <a href="{% url 'orders' %}">Замовлення</a>
-                    <a href="{% url 'user_profile' %}">Профіль</a>
-                {% else %}
-                    <a href="{% url 'login' %}">Увійти</a>
-                {% endif %}
-                {% if user.is_staff %}
-            
-            </div>
+            {% if user.is_staff %}
             <a href="{% url 'user_rights' %}" id="admin-tools-link">
                 <img src="{% static 'content/admin_tools.png' %}" id="admin-tools">
             </a>
             {% endif %}
+            <!-- Кнопки "Кошик" та "Увійти" -->
+            <div class="nav-buttons">
+            {% if user.is_authenticated %}
+                <a href="{% url 'cart' %}">Кошик</a>
+                <a href="{% url 'orders' %}">Замовлення</a>
+                <a href="{% url 'user_profile' %}">Профіль</a>
+            {% else %}
+                <a href="{% url 'login' %}">Увійти</a>
+            {% endif %}
+            </div>
         </nav>
     </header>
     <div class="container">
@@ -83,7 +81,11 @@
                 <!-- Кнопки -->
                 <div class="product-control">
                     {% if plant.quantity_in_stock > 0 %}
-                    <a href="{% url 'ordering_page' %}?plant_id={{ plant.plant_id }}&buy_now=true" class="add-to-cart">Купити</a>
+                    <form action="{% url 'ordering_page' %}" method="GET" style="display: inline;">
+                        <input type="hidden" name="plant_id" value="{{ plant.plant_id }}">
+                        <input type="hidden" name="buy_now" value="true">
+                        <button type="submit" class="add-to-cart">Купити</button>
+                    </form>
                     {% endif %}
 
                     {% if plant.plant_id in cart_items %}
@@ -140,6 +142,11 @@
     </div>
 
     <script>
+        document.getElementById('search').addEventListener('input', function (event) {
+        const input = event.target;
+        input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1);
+        });
+
         document.getElementById('search').addEventListener('input', function() {
             const query = this.value;
             console.log("Подія введення спрацювала. Запит:", query);  

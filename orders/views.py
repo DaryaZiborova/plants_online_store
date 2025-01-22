@@ -25,6 +25,9 @@ def add_to_cart(request, plant_id, q):
         
         if cart_item.items_quantity == plant.quantity_in_stock:
             return redirect(request.META.get('HTTP_REFERER'))
+    if q == 0:
+        cart_item.delete()
+        return redirect(request.META.get('HTTP_REFERER'))
     
     if not created:
         cart_item.items_quantity += q
@@ -39,7 +42,8 @@ def add_to_cart(request, plant_id, q):
 def cart_view(request):
     if not request.user.is_authenticated:
         messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб переглянути кошик.')
-        return redirect('login')  # Перенаправлення на сторінку входу
+        referer = request.META.get('HTTP_REFERER') or '/'  
+        return redirect(referer)
 
     cart_items = CartItem.objects.filter(user=request.user)
     user_cart = [
@@ -56,6 +60,10 @@ def cart_view(request):
 
 # Сторінка оформлення замовлення
 def ordering_page(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб купити.')
+        referer = request.META.get('HTTP_REFERER') or '/'  
+        return redirect(referer)
     plant_id = request.GET.get('plant_id')
     buy_now = request.GET.get('buy_now') == 'true'  # Перевіряємо, чи це "Купити зараз"
 
@@ -63,7 +71,6 @@ def ordering_page(request):
         # Якщо це "Купити зараз", створюємо тимчасовий кошик з одним товаром
         plant = get_object_or_404(Plant, plant_id=plant_id)
         if plant.quantity_in_stock < 1:
-            messages.warning(request, 'Товару немає в наявності!')
             return redirect('main_page')  # Перенаправлення на головну сторінку
 
         cart_items = [{
@@ -103,11 +110,6 @@ def place_order(request):
             # Якщо це "Купити зараз", отримуємо товар з параметрів запиту
             plant_id = request.POST.get('plant_id')
             plant = get_object_or_404(Plant, plant_id=plant_id)
-
-            # Перевіряємо наявність товару на складі
-            if plant.quantity_in_stock < 1:
-                messages.warning(request, 'Товару немає в наявності!')
-                return redirect('main_page')
 
             # Створюємо нове замовлення
             order = Order.objects.create(
@@ -162,7 +164,7 @@ def place_order(request):
                     order=order,
                     plant=cart_item.plant,
                     quantity=cart_item.items_quantity,
-                    price=cart_item.plant.price
+                    price=cart_item.plant.price * cart_item.items_quantity
                 )
 
                 # Зменшуємо кількість товару на складі
@@ -178,14 +180,9 @@ def place_order(request):
     # Якщо метод не POST, перенаправляємо на кошик
     return redirect('cart')
 
-
-
 # Перегляд замовлень
+@login_required
 def orders_view(request):
-    if not request.user.is_authenticated:
-        messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб переглянути замовлення.')
-        return redirect('login')
-
     # Отримуємо всі замовлення поточного користувача
     orders = Order.objects.filter(user=request.user).order_by('-order_date')
     return render(request, 'orders/orders.html', {'orders': orders})

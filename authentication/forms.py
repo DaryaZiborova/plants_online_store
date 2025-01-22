@@ -13,12 +13,12 @@ class RegisterForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = ['email', 'username', 'name', 'surname', 'phone_number', 'age', 'city', 'street', 'house', 'flat', 'password']
+        fields = ['email', 'first_name', 'last_name', 'phone_number', 'age', 'city', 'street', 'house', 'flat', 'password']
         labels = {
             'email': 'Електронна пошта',
-            'username': "Ім'я користувача",
-            'name': "Ім'я",
-            'surname': 'Прізвище',
+            #'username': "Ім'я користувача",
+            'first_name': "Ім'я",
+            'last_name': 'Прізвище',
             'phone_number': 'Номер телефону',
             'age': 'Вік',
             'city': 'Місто',
@@ -29,15 +29,15 @@ class RegisterForm(forms.ModelForm):
         }
         widgets = {
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Введіть електронну пошту...'}),
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Введіть ім'я користувача..."}),
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Введіть своє ім'я..."}),
-            'surname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть своє прізвище...'}),
+            #'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Введіть ім'я користувача..."}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Введіть своє ім'я..."}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть своє прізвище...'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть номер телефону...'}),
             'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Введіть свій вік...'}),
             'city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть місто...'}),
             'street': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть вулицю...'}),
             'house': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть будинок...'}),
-            'flat': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть поверх...'}),
+            'flat': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Введіть поверх...'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Придумайте пароль...'}),
         }
 

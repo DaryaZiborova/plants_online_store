@@ -114,6 +114,7 @@ h1 {
 }
 
 .item-name {
+    text-decoration: none;
     color: #333;
 }
 
@@ -183,4 +184,34 @@ h1 {
 
 .btn-submit:hover {
     background-color: #45a049;
+}
+a.btn-back {
+    display: inline-block;
+    margin-top: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+a.btn-back:hover {
+    text-decoration: underline #555;
+}
+.to-main-page {
+    position: absolute;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    background-color: #ffffff;
+    padding: 0 0 0 20px;
+    border-radius: 4px;
+    font-size: 18px;
+}
+
+.to-main-page:hover {
+    text-decoration: underline #555;
 }

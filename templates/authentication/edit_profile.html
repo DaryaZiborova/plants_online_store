@@ -18,15 +18,17 @@
         <div class="user-info">
             <form method="post" action="{% url 'edit_profile' %}">
             {% csrf_token %}
-                <p><strong>Нікнейм:</strong> <input type="text" name="username" value="{{ user.username }}"></p>
+                <p><strong>Ім'я:</strong> <input type="text" name="first_name" value="{{ user.first_name|default_if_none:'' }}"></p>
+                <p><strong>Прізвище:</strong> <input type="text" name="last_name" value="{{ user.last_name|default_if_none:'' }}"></p>
+                <p><strong>Вік:</strong> <input type="number" min="3" name="age" value="{{ user.age }}"></p>
                 <p><strong>Місто:</strong> <input type="text" name="city" value="{{ user.city }}"></p>
                 <p><strong>Вулиця:</strong> <input type="text" name="street" value="{{ user.street }}"></p>
                 <p><strong>Будинок:</strong> <input type="text" name="house" value="{{ user.house }}"></p>
-                <p><strong>Поверх:</strong> <input type="text" name="flat" value="{{ user.flat }}"></p>
-                <p><strong>Номер телефону:</strong> <input type="text" name="phone_number" value="{{ user.phone_number }}"></p>
-                <button type="submit" class="button">Зберегти зміни</button>
-                
+                <p><strong>Поверх:</strong> <input type="number" min="1" name="flat" value="{{ user.flat }}"></p>
+                <p><strong>Номер телефону:</strong> <input type="text" name="phone_number" value="{{ user.phone_number|default_if_none:'' }}"></p>
+                <button type="submit" id="submit-btn">Зберегти зміни</button>
             </form>
+            <a href="{% url 'user_profile' %}" class="btn-back">&larr; Скасувати</a>
         </div>
     </div>
 </body>

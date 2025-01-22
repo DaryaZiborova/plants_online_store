@@ -3,6 +3,7 @@ from django.contrib import messages  # Додано для повідомлен�
 from .forms import RegisterForm, LoginByEmailForm
 from django.contrib.auth import authenticate, login, logout
 from .models import User
+from django.contrib.auth.decorators import login_required
 
 # Реєстрація користувача
 def register_view(request):
@@ -61,21 +62,25 @@ def logout_view(request):
 
 # Сторінка користувача
 
+@login_required
 def user_profile(request):
     user = request.user  # Отримуємо поточного авторизованого користувача
     return render(request, 'authentication/user_profile.html', {'user': user})
 
+@login_required
 def edit_profile(request):
     user = request.user  # Отримуємо поточного користувача
 
     if request.method == 'POST':
         # Оновлення даних користувача
-        user.username = request.POST.get('username')
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
         user.city = request.POST.get('city')
         user.street = request.POST.get('street')
         user.house = request.POST.get('house')
         user.flat = request.POST.get('flat')
         user.phone_number = request.POST.get('phone_number')
+        user.age = None if request.POST.get('age') == '' else request.POST.get('age')
         user.save()  # Зберігаємо зміни
 
         messages.success(request, 'Профіль успішно оновлено.')

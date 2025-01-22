@@ -12,7 +12,7 @@
         <form method="post" action="{% url 'place_order' %}">
             {% csrf_token %}
             <!-- Приховані поля для передачі параметрів -->
-            <input type="hidden" name="buy_now" value="{{ buy_now }}">
+            <input type="hidden" name="buy_now" {% if buy_now %} value="true" {% else %} value="false" {% endif %}>
             {% if buy_now %}
                 <input type="hidden" name="plant_id" value="{{ cart_items.0.plant.plant_id }}">
             {% endif %}
@@ -79,3 +79,6 @@
             </div>
             <button type="submit" class="btn-submit">Підтвердити замовлення</button>
         </form>
+        <a href="javascript:history.back()" class="btn-back">&larr; Скасувати</a>
+    </div>
+</body>

@@ -16,12 +16,14 @@
     <div class="container">
         <h1>Ваш Профіль</h1>
         <div class="user-info">
-            <p><strong>Нікнейм:</strong> {{ user.username }}</p>
+            <p><strong>Ім'я:</strong> {{ user.first_name|default_if_none:"" }}</p>
+            <p><strong>Прізвище:</strong> {{ user.last_name|default_if_none:"" }}</p>
+            <p><strong>Вік:</strong> {{ user.age|default_if_none:"" }}</p>
             <p><strong>Місто:</strong> {{ user.city }}</p>
             <p><strong>Вулиця:</strong> {{ user.street }}</p>
             <p><strong>Будинок:</strong> {{ user.house }}</p>
             <p><strong>Поверх:</strong> {{ user.flat }}</p>
-            <p><strong>Номер телефону:</strong> {{ user.phone_number }}</p>
+            <p><strong>Номер телефону:</strong> {{ user.phone_number|default_if_none:"" }}</p>
             <a href="{% url 'edit_profile' %}" class="button">Редагувати профіль</a>
             <a href="{% url 'logout' %}" id="logout-btn">Вийти</a>
         </div>
