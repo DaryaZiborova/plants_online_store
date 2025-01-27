@@ -26,13 +26,15 @@ class Order(models.Model):
     order_date = models.DateTimeField(default=timezone.now)  # Дата замовлення
 
     STATUS_CHOICES = [
+        ('in_progress', 'В обробці'),
         ('shipped', 'Відправлено'),
         ('delivered', 'Доставлено'),
+        ('canceled', 'Скасовано')
     ]
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='shipped'  # За замовчуванням "Відправлено"
+        default='in_progress'  # За замовчуванням "Відправлено"
     )
 
     def __str__(self):

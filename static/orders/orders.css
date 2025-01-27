@@ -2,30 +2,43 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    background-color: #f9f9f9; /* Светло-серый фон */
 }
 
 .orders-container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
     background-color: white;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
 }
 
 h1 {
     text-align: center;
-    color: #333;
+    color: #333; /* Темно-серый */
     margin-bottom: 20px;
 }
 
+.user-orders {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #f9f9f9; /* Светло-серый фон */
+    border-radius: 10px;
+    border: 1px solid #ddd; /* Светлая обводка */
+}
+
+.user-orders h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
 .order-block {
-    border: 1px solid #ddd;
+    border: 1px solid #ddd; /* Светлая обводка */
     border-radius: 10px;
     padding: 15px;
     margin-bottom: 20px;
-    background-color: #fff;
+    background-color: #fff; /* Белый фон */
 }
 
 .order-header {
@@ -34,37 +47,35 @@ h1 {
     margin-bottom: 10px;
 }
 
-.order-header h2 {
+.order-header h3 {
     margin: 0;
     color: #333;
 }
 
 .order-date {
     margin: 0;
-    color: #777;
+    color: #777; /* Средне-серый */
     font-size: 14px;
 }
 
 .order-details {
-    margin-bottom: 15px;
+    margin-bottom: 30px; /* Увеличенный отступ снизу */
 }
 
 .order-details p {
-    margin: 5px 0;
-    color: #555;
-    text-align: left; /* Вирівнюємо текст зліва */
-}
-
-.order-details p.status {
-    font-weight: bold;
-    color: #4CAF50; /* Зелений колір для статусу */
+    margin: 20px 0; /* Увеличенный отступ сверху и снизу между строками */
+    color: #555; /* Темно-серый текст */
+    font-size: 20px; /* Увеличенный размер шрифта */
+    font-weight: bold; /* Жирный текст для выделения */
+    text-align: left; /* Выровнено по левому краю */
+    line-height: 1.6; /* Увеличенный интерлиньяж */
 }
 
 .order-items {
     margin-bottom: 15px;
 }
 
-.order-items h3 {
+.order-items h4 {
     margin: 10px 0;
     color: #333;
 }
@@ -79,7 +90,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     padding: 5px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #eee; /* Очень светлая граница */
 }
 
 .order-items li:last-child {
@@ -99,7 +110,7 @@ h1 {
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid #ddd;
-    background-color: #f4f4f4;
+    background-color: #f4f4f4; /* Легкий фон */
 }
 
 .empty-frame {
@@ -119,7 +130,6 @@ h1 {
 }
 
 .item-quantity {
-    margin-right: 40px;
     margin: 0 10px;
     color: #777;
 }
@@ -127,79 +137,73 @@ h1 {
 .item-price {
     text-align: left;
     width: 120px;
-    color: #4CAF50;
+    color: #4CAF50; /* Зеленый */
     font-weight: bold;
 }
 
 .order-total {
-    text-align: left; 
+    text-align: left;
     font-size: 18px;
     font-weight: bold;
     color: #4CAF50;
-    margin-top: 20px; 
-    padding: 10px 0 0 20px; 
-    border-radius: 5px; 
+    margin-top: 20px;
+    padding: 10px 0 0 20px;
+    border-radius: 5px;
 }
 
-.ordering-container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: white;
+/* Стили для формы изменения статуса */
+form {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f9f9f9; /* Светло-серый фон */
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd; /* Светлая обводка */
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
+form label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    font-family: Arial, sans-serif; /* Звичайний шрифт для міток */
+    color: #333;
 }
 
-.form-group input, .form-group select {
+form select {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
+    padding: 10px;
+    border: 1px solid #4CAF50; /* Зеленая граница */
     border-radius: 5px;
     font-size: 14px;
-    font-family: Arial, sans-serif; /* Звичайний шрифт для полів введення */
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.3s ease;
 }
 
-.btn-submit {
-    background-color: #4CAF50;
+form select:focus {
+    border-color: #45a049; /* Темно-зеленая граница при фокусе */
+    outline: none;
+}
+
+form button {
+    background-color: #4CAF50; /* Зеленый фон */
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    width: 100%;
-    font-family: Arial, sans-serif; /* Звичайний шрифт для кнопки */
-}
-
-.btn-submit:hover {
-    background-color: #45a049;
-}
-a.btn-back {
-    display: inline-block;
     margin-top: 10px;
-    text-align: center;
-    text-decoration: none;
-    color: #333;
-    background-color: #ffffff;
-    padding: 10px;
-    border-radius: 4px;
-    font-size: 16px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень кнопки */
 }
 
-a.btn-back:hover {
-    text-decoration: underline #555;
+form button:hover {
+    background-color: #45a049; /* Темно-зеленый фон при наведении */
 }
+
+form button:active {
+    transform: scale(0.98);
+}
+
 .to-main-page {
     position: absolute;
     display: inline-block;
@@ -207,11 +211,12 @@ a.btn-back:hover {
     text-decoration: none;
     color: #333;
     background-color: #ffffff;
-    padding: 0 0 0 20px;
+    padding: 10px 20px;
     border-radius: 4px;
     font-size: 18px;
+    transition: background-color 0.3s ease;
 }
 
 .to-main-page:hover {
-    text-decoration: underline #555;
+    background-color: #f4f4f4; /* Легкий серый фон */
 }

@@ -1,0 +1,219 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+.orders-container {
+    max-width: 1200px; /* Увеличиваем ширину контейнера */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.user-orders {
+    margin-bottom: 30px; /* Отступ между заказами разных пользователей */
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.user-orders h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.order-block {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.order-header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.order-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.order-date {
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.order-details {
+    margin-bottom: 15px;
+}
+
+.order-details p {
+    margin: 5px 0;
+    color: #555;
+    text-align: left;
+}
+
+.order-items {
+    margin-bottom: 15px;
+}
+
+.order-items h4 {
+    margin: 10px 0;
+    color: #333;
+}
+
+.order-items ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.order-items li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-items li:last-child {
+    border-bottom: none;
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 60%;
+}
+
+.plant-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f4f4f4;
+}
+
+.empty-frame {
+    width: 50px;
+    height: 50px;
+    border: 1px dashed #ccc;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-name {
+    text-decoration: none;
+    color: #333;
+}
+
+.item-quantity {
+    margin-right: 40px;
+    margin: 0 10px;
+    color: #777;
+}
+
+.item-price {
+    text-align: left;
+    width: 120px;
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.order-total {
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    color: #4CAF50;
+    margin-top: 20px;
+    padding: 10px 0 0 20px;
+    border-radius: 5px;
+}
+
+/* Стили для формы изменения статуса */
+form {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #4CAF50; /* Зеленая граница */
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+form select:focus {
+    border-color: #45a049; /* Темно-зеленая граница при фокусе */
+    outline: none;
+}
+
+form button {
+    background-color: #4CAF50; /* Зеленый фон */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень для кнопки */
+}
+
+form button:hover {
+    background-color: #45a049; /* Темно-зеленый фон при наведении */
+}
+
+form button:active {
+    transform: scale(0.98); /* Легкое уменьшение кнопки при нажатии */
+}
+
+.to-main-page {
+    position: absolute;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    background-color: #ffffff;
+    padding: 0 0 0 20px;
+    border-radius: 4px;
+    font-size: 18px;
+}
+
+.to-main-page:hover {
+    text-decoration: underline #555;
+}

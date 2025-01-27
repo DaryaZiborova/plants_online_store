@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="uk">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Всі замовлення</title>
+    <link rel="stylesheet" href="{% static 'orders/admin_orders.css' %}">
+</head>
+<body>
+    <a href="{% url 'main_page' %}" class="to-main-page">&larr; На головну</a>
+    <div class="orders-container">
+        <h1>Всі замовлення</h1>
+
+        {% if orders_by_user %}
+            {% for email, orders in orders_by_user.items %}
+                <div class="user-orders">
+                    <h2>Замовлення для {{ email }}</h2>
+                    {% for order in orders %}
+                        <div class="order-block">
+                            <div class="order-header">
+                                <h3>Замовлення №{{ order.order_id }}</h3>
+                                <p class="order-date">Дата: {{ order.order_date }}</p>
+                            </div>
+                            <div class="order-details">
+                                <p><strong>Спосіб оплати:</strong> {{ order.payment_method }}</p>
+                                <p><strong>Адреса доставки:</strong> {{ order.order_city }}, {{ order.order_street }}, {{ order.order_house }}, кв. {{ order.order_flat }}</p>
+                                <p><strong>Статус замовлення:</strong> {{ order.get_status_display }}</p>
+                            </div>
+                            <div class="order-items">
+                                <h4>Товари:</h4>
+                                <ul>
+                                    {% for item in order.items.all %}
+                                        <li>
+                                            <div class="item-info">
+                                                {% if item.plant.photo %}
+                                                    <img class="plant-img" src="{% static 'plants/' %}{{ item.plant.photo }}" alt="{{ item.plant.plant_name }}">
+                                                {% else %}
+                                                    <div class="empty-frame"></div>
+                                                {% endif %}
+                                                <a href="{% url 'plant_detail' item.plant.plant_id %}" class="item-name">{{ item.plant.plant_name }}</a>
+                                            </div>
+                                            <span class="item-quantity">{{ item.quantity }} шт.</span>
+                                            <span class="item-price">{{ item.price }} грн</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <p class="order-total"><strong>Загальна сума:</strong> {{ order.total_price }} грн</p>
+                            </div>
+                            <!-- Форма для изменения статуса заказа -->
+                            {% if order.status != 'canceled' %}
+                                <form method="post" action="{% url 'admin_orders' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                                    <label for="id_status">Статус:</label>
+                                    <select name="status" id="id_status">
+                                        {% if order.status == 'in_progress' %}
+                                            <!-- Если статус "В обробці", можно выбрать только "Відправлено" или "Скасовано" -->
+                                            <option value="shipped">Відправлено</option>
+                                            <option value="canceled">Скасовано</option>
+                                        {% elif order.status == 'shipped' %}
+                                            <!-- Если статус "Відправлено", можно выбрать только "Доставлено" или "Скасовано" -->
+                                            <option value="delivered">Доставлено</option>
+                                            <option value="canceled">Скасовано</option>
+                                        {% elif order.status == 'delivered' %}
+                                            <!-- Если статус "Доставлено", можно выбрать только "Скасовано" -->
+                                            <option value="canceled">Скасовано</option>
+                                        {% endif %}
+                                    </select>
+                                    <button type="submit">Оновити статус</button>
+                                </form>
+                            {% else %}
+                                <p>Замовлення скасоване. Зміна статусу неможлива.</p>
+                            {% endif %}
+                        </div> <!-- Закрываем order-block -->
+                    {% endfor %}
+                </div> <!-- Закрываем user-orders -->
+            {% endfor %}
+        {% else %}
+            <p>Немає замовлень.</p>
+        {% endif %}
+    </div> <!-- Закрываем orders-container -->
+</body>
+</html>

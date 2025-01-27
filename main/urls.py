@@ -38,4 +38,5 @@ urlpatterns = [
     path('orders/', ord_views.orders_view, name='orders'),  # Сторінка "Мої замовлення"
     path('manage-user-rights', views.user_rights, name='user_rights'),
     path('plant/<int:plant_id>/edit', views.edit_plant, name='edit_plant'),
+    path('admin-orders/', views.admin_orders, name='admin_orders'),
 ]
