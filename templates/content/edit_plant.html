@@ -59,6 +59,10 @@
             <input type="hidden" id="photo_is_deleted" name="photo_is_deleted" value="false">
             <button type="submit" class="btn-submit">Зберегти зміни</button>
         </form>
+        <form action="{% url 'delete_plant' plant.plant_id %}" method="post" onsubmit="return confirm('Ви впевнені, що хочете видалити цю рослину?');">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete">Видалити рослину</button>
+        </form>
         <a href="{% url 'plant_detail' plant.plant_id %}" class="btn-back">&larr; Скасувати</a>
     </div>
 </body>

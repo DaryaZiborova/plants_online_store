@@ -17,8 +17,11 @@
                 <div id="autocomplete-results"></div> 
             </form>
             {% if user.is_staff %}
-            <a href="{% url 'user_rights' %}" id="admin-tools-link">
-                <img src="{% static 'content/admin_tools.png' %}" id="admin-tools">
+            <a href="{% url 'user_rights' %}" class="admin-tool-link">
+                <img src="{% static 'content/admin_tools.png' %}" class="admin-tool">
+            </a>
+            <a href="{% url 'user_rights' %}" class="admin-tool-link" id="deliveries">
+                <img src="{% static 'content/deliveries.png' %}" class="admin-tool">
             </a>
             {% endif %}
             <!-- Кнопки "Кошик" та "Увійти" -->
@@ -65,6 +68,13 @@
             </form>
         </aside>
         <main class="product-list">
+            {% if user.is_staff %}
+                {% if request.GET.p|default:"1" == "1" %}
+            <div class="product">
+                <a href="{% url 'create_plant' %}">add</a>
+            </div>
+                {% endif %}
+            {% endif %}
             <!-- Продукти -->
             {% for plant in plants %}
             <div class="product">

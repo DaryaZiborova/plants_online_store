@@ -11,7 +11,7 @@ import os
 from django.core.files.storage import default_storage
 
 def main_page(request):
-    plants = Plant.objects.all()  
+    plants = Plant.objects.all().order_by('-plant_id')
     countries = Supplier.objects.values_list('country', flat=True).distinct()  
     categories = Plant.objects.values_list('category', flat=True).distinct() 
 
@@ -134,7 +134,7 @@ def user_rights(request):
     return render(request, 'content/admin_management.html', {'users': users})
 
 @user_passes_test(lambda u: u.is_staff)
-def edit_plant(request, plant_id):
+def update_plant(request, plant_id):
     plant = get_object_or_404(Plant, plant_id=plant_id)
     
     if request.method == 'POST':
@@ -173,3 +173,47 @@ def edit_plant(request, plant_id):
                'suppliers': Supplier.objects.all(),
                }
     return render(request, 'content/edit_plant.html', context)
+
+@user_passes_test(lambda u: u.is_staff)
+def create_plant(request):
+    if request.method == 'POST':
+        plant = Plant()
+        plant.category = request.POST.get('category')
+        plant.genus_id = request.POST.get('genus')
+        plant.supplier_id = request.POST.get('supplier')
+        plant.plant_name = request.POST.get('plant_name')
+        plant.plant_description = request.POST.get('plant_description')
+        plant.price = request.POST.get('price')
+        plant.quantity_in_stock = request.POST.get('quantity_in_stock')
+        plant.weight = request.POST.get('weight')
+
+        if 'photo' in request.FILES:
+            photo = request.FILES['photo']
+            extension = os.path.splitext(photo.name)[1]
+            photo_name = f"{plant.genus_id}_{plant.plant_id}{extension}"
+            photo_path = os.path.join('plants', photo_name)
+            default_storage.save(photo_path, photo)
+            plant.photo = photo_name
+
+        plant.save()
+        return redirect('plant_detail', plant_id=plant.plant_id) 
+
+    context = {
+        'genuses': Plant_genus.objects.all(),
+        'suppliers': Supplier.objects.all(),
+        'categories': Plant.CATEGORY_CHOICES,
+    }
+    return render(request, 'content/create_plant.html', context)
+
+@user_passes_test(lambda u: u.is_staff)
+def delete_plant(request, plant_id):
+    plant = get_object_or_404(Plant, plant_id=plant_id)
+    if request.method == 'POST':
+        if plant.photo:  
+            photo_path = f'plants/{plant.photo}'
+            if default_storage.exists(photo_path):
+                default_storage.delete(photo_path)
+
+        plant.delete()
+        messages.success(request, f"Рослину '{plant.plant_name}' успішно видалено.")
+        return redirect('main_page')

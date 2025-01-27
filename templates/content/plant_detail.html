@@ -19,7 +19,7 @@
     <div class="container">
         <div class="plant-detail">
             {% if user.is_staff %}
-            <a href="{% url 'edit_plant' plant_id=plant.plant_id %}" id="edit-product-link">
+            <a href="{% url 'update_plant' plant_id=plant.plant_id %}" id="edit-product-link">
                 <img src="{% static 'content/edit_product.png' %}" id="edit-product">
             </a>
             {% endif %}

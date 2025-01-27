@@ -22,7 +22,7 @@ class Plant(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     genus = models.ForeignKey(Plant_genus, on_delete=models.CASCADE, to_field='plant_genus_id') 
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, to_field='supplier_id')
-    plant_name = models.CharField(max_length=100)
+    plant_name = models.CharField(max_length=100, null=False, blank=False)
     plant_description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity_in_stock = models.PositiveIntegerField()

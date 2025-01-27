@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="uk">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Додати рослину</title>
+    <link rel="stylesheet" href="{% static 'content/edit_plant.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Додати нову рослину</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="category">Категорія:</label>
+            <select id="category" name="category">
+                {% for value, label in categories %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+            <label for="genus">Рід:</label>
+            <select id="genus" name="genus">
+                {% for genus in genuses %}
+                    <option value="{{ genus.plant_genus_id }}">{{ genus.genus_name }}</option>
+                {% endfor %}
+            </select>
+            <label for="supplier">Постачальник:</label>
+            <select id="supplier" name="supplier">
+                {% for supplier in suppliers %}
+                    <option value="{{ supplier.supplier_id }}">{{ supplier.supplier_name }}</option>
+                {% endfor %}
+            </select>
+            <label for="plant_name">Назва рослини:</label>
+            <input type="text" id="plant_name" name="plant_name" placeholder="Введіть назву рослини..." required>
+            <label for="plant_description">Опис:</label>
+            <textarea id="plant_description" name="plant_description" rows="4" placeholder="Введіть опис..."></textarea>
+            <label for="price">Ціна:</label>
+            <input type="number" class="wider-input" id="price" name="price" step="0.01" min="0.01" placeholder="Введіть ціну..." required>
+            <label for="quantity_in_stock">Кількість у наявності:</label>
+            <input type="number" class="wider-input" id="quantity_in_stock" name="quantity_in_stock" min="0" placeholder="Введіть кількість..." required>
+            <label for="weight">Вага (кг):</label>
+            <input type="number" class="wider-input" id="weight" name="weight" step="0.01" min="0.01" placeholder="Введіть вагу..." required>
+            <label>Фото:</label>
+            <div class="image-upload">
+                <label for="photo" class="image-container">
+                    <img id="preview" src="{% static 'content/placeholder.jpg' %}" class="plant-photo">
+                    <div class="overlay">Завантажити фото</div>
+                </label>
+                <input type="file" id="photo" name="photo" accept="image/*" style="display: none;">
+                <img id="delete" src="{% static 'content/delete.png' %}">
+            </div>
+            <button type="submit" class="btn-submit">Додати рослину</button>
+        </form>
+        <a href="{% url 'main_page' %}" class="btn-back">&larr; Повернутися</a>
+    </div>
+</body>
+</html>
+<script>
+    const fileInput = document.getElementById('photo');
+    const deleteButton = document.getElementById('delete');
+    const previewImage = document.getElementById('preview');
+
+    // Слухач для завантаження фото
+    fileInput.addEventListener('change', function(event) {
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    });
+
+    // Слухач для видалення фото
+    deleteButton.addEventListener('click', function() {
+        previewImage.src = "{% static 'content/placeholder.jpg' %}";
+        fileInput.value = null;
+    });
+</script>
