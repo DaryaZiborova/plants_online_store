@@ -6,7 +6,7 @@ body, html {
 }
 
 .orders-container {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 20px auto;
     padding: 20px;
     background-color: white;
@@ -150,7 +150,53 @@ h1 {
     padding: 10px 0 0 20px;
     border-radius: 5px;
 }
+.ordering-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-family: Arial, sans-serif; /* Звичайний шрифт для міток */
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: Arial, sans-serif; /* Звичайний шрифт для полів введення */
+}
+.form-group input{
+    width: 97%;
+}
+
+.btn-submit {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    font-family: Arial, sans-serif; /* Звичайний шрифт для кнопки */
+}
+
+.btn-submit:hover {
+    background-color: #45a049;
+}
 /* Стили для формы изменения статуса */
 form {
     margin-top: 15px;
@@ -158,50 +204,6 @@ form {
     background-color: #f9f9f9; /* Светло-серый фон */
     border-radius: 10px;
     border: 1px solid #ddd; /* Светлая обводка */
-}
-
-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-}
-
-form select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #4CAF50; /* Зеленая граница */
-    border-radius: 5px;
-    font-size: 14px;
-    background-color: #fff;
-    color: #333;
-    transition: border-color 0.3s ease;
-}
-
-form select:focus {
-    border-color: #45a049; /* Темно-зеленая граница при фокусе */
-    outline: none;
-}
-
-form button {
-    background-color: #4CAF50; /* Зеленый фон */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень кнопки */
-}
-
-form button:hover {
-    background-color: #45a049; /* Темно-зеленый фон при наведении */
-}
-
-form button:active {
-    transform: scale(0.98);
 }
 
 .to-main-page {
@@ -219,4 +221,19 @@ form button:active {
 
 .to-main-page:hover {
     background-color: #f4f4f4; /* Легкий серый фон */
+}
+a.btn-back {
+    display: inline-block;
+    margin-top: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+a.btn-back:hover {
+    text-decoration: underline #555;
 }

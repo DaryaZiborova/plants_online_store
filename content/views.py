@@ -177,7 +177,6 @@ def update_plant(request, plant_id):
     return render(request, 'content/edit_plant.html', context)
 
 @user_passes_test(lambda u: u.is_staff)
-<<<<<<< HEAD
 def create_plant(request):
     if request.method == 'POST':
         plant = Plant()
@@ -220,7 +219,8 @@ def delete_plant(request, plant_id):
         plant.delete()
         messages.success(request, f"Рослину '{plant.plant_name}' успішно видалено.")
         return redirect('main_page')
-=======
+
+@user_passes_test(lambda u: u.is_staff)
 def admin_orders(request):
     orders = Order.objects.all().order_by('user__email', 'order_date')
     orders_by_user = {}
@@ -293,4 +293,3 @@ def admin_orders(request):
         'orders_by_user': orders_by_user,
     }
     return render(request, 'orders/admin_orders.html', context)
->>>>>>> 7b4768178a3a964adf2c408b7e5952bfd0d3e0f4

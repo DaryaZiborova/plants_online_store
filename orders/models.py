@@ -23,7 +23,10 @@ class Order(models.Model):
     order_flat = models.CharField(max_length=10)  # Квартира доставки
     total_price = models.DecimalField(max_digits=10, decimal_places=2)  # Загальна сума замовлення
     payment_method = models.CharField(max_length=50)  # Спосіб оплати
+    promocode = models.CharField(max_length=100, null=True, blank=True)
+    discount = models.IntegerField(default=0)
     order_date = models.DateTimeField(default=timezone.now)  # Дата замовлення
+    delivery_date = models.DateTimeField(default=timezone.now)
 
     STATUS_CHOICES = [
         ('in_progress', 'В обробці'),
