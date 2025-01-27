@@ -130,10 +130,6 @@ def place_order(request):
                 price=plant.price
             )
 
-            # Зменшуємо кількість товару на складі
-            plant.quantity_in_stock -= 1
-            plant.save()
-
             messages.success(request, 'Замовлення успішно оформлено!')
             return redirect('orders')  # Перенаправлення на сторінку замовлень
 
@@ -166,10 +162,6 @@ def place_order(request):
                     quantity=cart_item.items_quantity,
                     price=cart_item.plant.price * cart_item.items_quantity
                 )
-
-                # Зменшуємо кількість товару на складі
-                cart_item.plant.quantity_in_stock -= cart_item.items_quantity
-                cart_item.plant.save()
 
             # Очищаємо кошик після оформлення замовлення
             cart_items.delete()

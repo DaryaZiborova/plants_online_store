@@ -5,10 +5,12 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required, user_passes_test
 from content.models import Plant, Supplier, Plant_genus
 from authentication.models import User
+from orders.models import Order 
 from orders.models import CartItem
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import os
 from django.core.files.storage import default_storage
+from content.forms import OrderStatusForm
 
 def main_page(request):
     plants = Plant.objects.all().order_by('-plant_id')
@@ -175,6 +177,7 @@ def update_plant(request, plant_id):
     return render(request, 'content/edit_plant.html', context)
 
 @user_passes_test(lambda u: u.is_staff)
+<<<<<<< HEAD
 def create_plant(request):
     if request.method == 'POST':
         plant = Plant()
@@ -217,3 +220,77 @@ def delete_plant(request, plant_id):
         plant.delete()
         messages.success(request, f"Рослину '{plant.plant_name}' успішно видалено.")
         return redirect('main_page')
+=======
+def admin_orders(request):
+    orders = Order.objects.all().order_by('user__email', 'order_date')
+    orders_by_user = {}
+
+    # Обробка зміни статусу замовлення
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        if not order_id:  # Перевірка, чи order_id не пустий
+            messages.error(request, "ID замовлення відсутній.")
+            return redirect('admin_orders')
+
+        try:
+            order = get_object_or_404(Order, order_id=order_id)
+            new_status = request.POST.get('status')
+
+            # Перевірка, чи замовлення вже скасоване
+            if order.status == 'canceled':
+                messages.error(request, "Замовлення скасоване. Зміна статусу неможлива.")
+                return redirect('admin_orders')
+
+            # Перевірка допустимих переходів статусів
+            if order.status == 'in_progress' and new_status not in ['shipped', 'canceled']:
+                messages.error(request, "Після статусу 'В обробці' можна вибрати лише 'Відправлено' або 'Скасовано'.")
+                return redirect('admin_orders')
+
+            if order.status == 'shipped' and new_status not in ['delivered', 'canceled']:
+                messages.error(request, "Після статусу 'Відправлено' можна вибрати лише 'Доставлено' або 'Скасовано'.")
+                return redirect('admin_orders')
+
+            if order.status == 'delivered' and new_status != 'canceled':
+                messages.error(request, "Після статусу 'Доставлено' можна вибрати лише 'Скасовано'.")
+                return redirect('admin_orders')
+
+            # Зменшення кількості рослин на складі після зміни статусу на "Відправлено"
+            if new_status == 'shipped' and order.status != 'shipped':
+                for item in order.items.all():
+                    plant = item.plant
+                    if plant.quantity_in_stock < item.quantity:
+                        messages.error(request, f"Недостатня кількість товару '{plant.plant_name}' на складі.")
+                        return redirect('admin_orders')
+                    plant.quantity_in_stock -= item.quantity
+                    plant.save()
+
+            # Повернення товару на склад при скасуванні замовлення
+            if new_status == 'canceled' and order.status != 'canceled':
+                for item in order.items.all():
+                    plant = item.plant
+                    plant.quantity_in_stock += item.quantity
+                    plant.save()
+
+            # Оновлюємо статус замовлення
+            order.status = new_status
+            order.save()
+            messages.success(request, "Статус замовлення оновлено.")
+            return redirect('admin_orders')
+
+        except Exception as e:
+            messages.error(request, f"Помилка: {str(e)}")
+            return redirect('admin_orders')
+
+    # Групуємо замовлення за email користувача
+    for order in orders:
+        email = order.user.email
+        if email not in orders_by_user:
+            orders_by_user[email] = []
+        orders_by_user[email].append(order)
+
+    # Передаємо дані в шаблон
+    context = {
+        'orders_by_user': orders_by_user,
+    }
+    return render(request, 'orders/admin_orders.html', context)
+>>>>>>> 7b4768178a3a964adf2c408b7e5952bfd0d3e0f4

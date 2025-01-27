@@ -2,30 +2,30 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9; /* Светло-серый фон */
+    background-color: #f9f9f9;
 }
 
 .orders-container {
-    max-width: 1200px;
+    max-width: 1200px; /* Увеличиваем ширину контейнера */
     margin: 20px auto;
     padding: 20px;
     background-color: white;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
     text-align: center;
-    color: #333; /* Темно-серый */
+    color: #333;
     margin-bottom: 20px;
 }
 
 .user-orders {
-    margin-bottom: 30px;
+    margin-bottom: 30px; /* Отступ между заказами разных пользователей */
     padding: 15px;
-    background-color: #f9f9f9; /* Светло-серый фон */
+    background-color: #f9f9f9;
     border-radius: 10px;
-    border: 1px solid #ddd; /* Светлая обводка */
+    border: 1px solid #ddd;
 }
 
 .user-orders h2 {
@@ -34,11 +34,11 @@ h1 {
 }
 
 .order-block {
-    border: 1px solid #ddd; /* Светлая обводка */
+    border: 1px solid #ddd;
     border-radius: 10px;
     padding: 15px;
     margin-bottom: 20px;
-    background-color: #fff; /* Белый фон */
+    background-color: #fff;
 }
 
 .order-header {
@@ -54,21 +54,18 @@ h1 {
 
 .order-date {
     margin: 0;
-    color: #777; /* Средне-серый */
+    color: #777;
     font-size: 14px;
 }
 
 .order-details {
-    margin-bottom: 30px; /* Увеличенный отступ снизу */
+    margin-bottom: 15px;
 }
 
 .order-details p {
-    margin: 20px 0; /* Увеличенный отступ сверху и снизу между строками */
-    color: #555; /* Темно-серый текст */
-    font-size: 20px; /* Увеличенный размер шрифта */
-    font-weight: bold; /* Жирный текст для выделения */
-    text-align: left; /* Выровнено по левому краю */
-    line-height: 1.6; /* Увеличенный интерлиньяж */
+    margin: 5px 0;
+    color: #555;
+    text-align: left;
 }
 
 .order-items {
@@ -90,7 +87,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     padding: 5px 0;
-    border-bottom: 1px solid #eee; /* Очень светлая граница */
+    border-bottom: 1px solid #eee;
 }
 
 .order-items li:last-child {
@@ -110,7 +107,7 @@ h1 {
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid #ddd;
-    background-color: #f4f4f4; /* Легкий фон */
+    background-color: #f4f4f4;
 }
 
 .empty-frame {
@@ -130,6 +127,7 @@ h1 {
 }
 
 .item-quantity {
+    margin-right: 40px;
     margin: 0 10px;
     color: #777;
 }
@@ -137,7 +135,7 @@ h1 {
 .item-price {
     text-align: left;
     width: 120px;
-    color: #4CAF50; /* Зеленый */
+    color: #4CAF50;
     font-weight: bold;
 }
 
@@ -155,9 +153,9 @@ h1 {
 form {
     margin-top: 15px;
     padding: 15px;
-    background-color: #f9f9f9; /* Светло-серый фон */
+    background-color: #f9f9f9;
     border-radius: 10px;
-    border: 1px solid #ddd; /* Светлая обводка */
+    border: 1px solid #ddd;
 }
 
 form label {
@@ -193,7 +191,7 @@ form button {
     font-size: 16px;
     margin-top: 10px;
     transition: background-color 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень кнопки */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень для кнопки */
 }
 
 form button:hover {
@@ -201,7 +199,7 @@ form button:hover {
 }
 
 form button:active {
-    transform: scale(0.98);
+    transform: scale(0.98); /* Легкое уменьшение кнопки при нажатии */
 }
 
 .to-main-page {
@@ -211,12 +209,11 @@ form button:active {
     text-decoration: none;
     color: #333;
     background-color: #ffffff;
-    padding: 10px 20px;
+    padding: 0 0 0 20px;
     border-radius: 4px;
     font-size: 18px;
-    transition: background-color 0.3s ease;
 }
 
 .to-main-page:hover {
-    background-color: #f4f4f4; /* Легкий серый фон */
+    text-decoration: underline #555;
 }
