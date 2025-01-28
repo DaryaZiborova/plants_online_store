@@ -2,6 +2,7 @@ from django.db import models
 from authentication.models import User
 from content.models import Plant
 from django.utils import timezone 
+from datetime import datetime, timedelta
 
 # Create your models here.
     
@@ -40,6 +41,12 @@ class Order(models.Model):
         default='in_progress'  # За замовчуванням "Відправлено"
     )
 
+    def set_delivery_date(self, date):
+        if date > self.order_date + timedelta(days=1):
+            self.delivery_date = date
+        else:
+            raise ValueError("Delivery date must be at least one day after the order date.")
+    
     def __str__(self):
         return f"Order #{self.order_id} by {self.user.email}"
 

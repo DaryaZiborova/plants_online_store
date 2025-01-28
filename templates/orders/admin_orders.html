@@ -19,12 +19,23 @@
                         <div class="order-block">
                             <div class="order-header">
                                 <h3>Замовлення №{{ order.order_id }}</h3>
-                                <p class="order-date">Дата: {{ order.order_date }}</p>
+                                <p class="order-date">Дата: {{ order.order_date|date:"d.m.Y" }}</p>
                             </div>
                             <div class="order-details">
                                 <p><strong>Спосіб оплати:</strong> {{ order.payment_method }}</p>
                                 <p><strong>Адреса доставки:</strong> {{ order.order_city }}, {{ order.order_street }}, {{ order.order_house }}, кв. {{ order.order_flat }}</p>
                                 <p><strong>Статус замовлення:</strong> {{ order.get_status_display }}</p>
+                                <p><strong>Очікувана дата доставки:</strong> 
+                                    {% if order.status == 'canceled' %}
+                                        Замовлення скасовано.
+                                    {% elif order.status == 'in_progress' %}
+                                        Очікує відправлення.
+                                    {% elif order.delivery_date %}
+                                        {{ order.delivery_date|date:"d.m.Y" }}
+                                    {% else %}
+                                        Ще не встановлено.
+                                    {% endif %}
+                                </p>
                             </div>
                             <div class="order-items">
                                 <h4>Товари:</h4>
@@ -54,30 +65,37 @@
                                     <label for="id_status">Статус:</label>
                                     <select name="status" id="id_status">
                                         {% if order.status == 'in_progress' %}
-                                            <!-- Если статус "В обробці", можно выбрать только "Відправлено" или "Скасовано" -->
                                             <option value="shipped">Відправлено</option>
                                             <option value="canceled">Скасовано</option>
                                         {% elif order.status == 'shipped' %}
-                                            <!-- Если статус "Відправлено", можно выбрать только "Доставлено" или "Скасовано" -->
                                             <option value="delivered">Доставлено</option>
                                             <option value="canceled">Скасовано</option>
                                         {% elif order.status == 'delivered' %}
-                                            <!-- Если статус "Доставлено", можно выбрать только "Скасовано" -->
                                             <option value="canceled">Скасовано</option>
                                         {% endif %}
                                     </select>
                                     <button type="submit">Оновити статус</button>
                                 </form>
+                                {% if order.status == 'shipped' %}
+                                    <form method="post" action="{% url 'admin_orders' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                                        <label for="delivery_date">Очікувана дата доставки:</label>
+                                        <input type="date" name="delivery_date" min="{{ order.order_date|date:'Y-m-d' }}">
+                                        <button type="submit">Встановити</button>
+                                    </form>
+                                {% endif %}
                             {% else %}
                                 <p>Замовлення скасоване. Зміна статусу неможлива.</p>
                             {% endif %}
-                        </div> <!-- Закрываем order-block -->
+                        </div>
                     {% endfor %}
-                </div> <!-- Закрываем user-orders -->
+                </div>
             {% endfor %}
         {% else %}
             <p>Немає замовлень.</p>
         {% endif %}
-    </div> <!-- Закрываем orders-container -->
+    </div>
 </body>
 </html>
+

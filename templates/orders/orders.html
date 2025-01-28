@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'orders/orders.css' %}">
 </head>
 <body>
-    <a href="{% url 'main_page' %}" class="to-main-page">&larr;  На головну</a>
+    <a href="{% url 'main_page' %}" class="to-main-page">&larr; На головну</a>
     <div class="orders-container">
         <h1>Ваші замовлення</h1>
     
@@ -16,12 +16,23 @@
                 <div class="order-block">
                     <div class="order-header">
                         <h2>Замовлення №{{ order.order_id }}</h2>
-                        <p class="order-date">Дата: {{ order.order_date }}</p>
+                        <p class="order-date">Дата: {{ order.order_date|date:"d.m.Y" }}</p>
                     </div>
                     <div class="order-details">
                         <p><strong>Спосіб оплати:</strong> {{ order.payment_method }}</p>
                         <p><strong>Адреса доставки:</strong> {{ order.order_city }}, {{ order.order_street }}, {{ order.order_house }}, кв. {{ order.order_flat }}</p>
-                        <p><strong>Статус замовлення:</strong> {{ order.get_status_display }}</p> <!-- Додано статус -->
+                        <p><strong>Статус замовлення:</strong> {{ order.get_status_display }}</p>
+                        <p><strong>Очікувана дата доставки:</strong> 
+                            {% if order.status == 'canceled' %}
+                                Замовлення скасовано.
+                            {% elif order.status == 'in_progress' %}
+                                Очікуйте відправлення.
+                            {% elif order.delivery_date %}
+                                {{ order.delivery_date|date:"d.m.Y" }}
+                            {% else %}
+                                Очікуйте відправлення.
+                            {% endif %}
+                        </p>
                     </div>
                     <div class="order-items">
                         <h3>Товари:</h3>
@@ -49,6 +60,7 @@
             <p>У вас немає замовлень.</p>
         {% endif %}
     </div>
-
 </body>
 </html>
+
+
