@@ -4,7 +4,40 @@ body, html {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9; /* Светло-серый фон */
 }
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-bottom: none; 
+}
+.nav-buttons {
+    margin-left: auto;
+    margin-right: 0;
+    display: flex;
+    align-items: center; /* Вирівнюємо всі елементи по центру вертикально */
+    gap: 10px; 
+    border: none; 
+}
 
+.nav-buttons a {
+    width: 90px;
+    text-align: center;
+    padding: 8px 12px;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+    border: 1px dashed #ffffff; 
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+    display: flex;
+    height: 100%; 
+    justify-content: center;
+}
+.nav-buttons a:hover{
+    background-color: #45a049;
+}
 .orders-container {
     max-width: 800px;
     margin: 20px auto;
@@ -61,14 +94,15 @@ h1 {
 .order-details {
     margin-bottom: 30px; /* Увеличенный отступ снизу */
 }
-
 .order-details p {
-    margin: 20px 0; /* Увеличенный отступ сверху и снизу между строками */
-    color: #555; /* Темно-серый текст */
-    font-size: 20px; /* Увеличенный размер шрифта */
-    font-weight: bold; /* Жирный текст для выделения */
-    text-align: left; /* Выровнено по левому краю */
-    line-height: 1.6; /* Увеличенный интерлиньяж */
+    margin: 5px 0;
+    color: #555;
+    text-align: left; /* Вирівнюємо текст зліва */
+}
+
+.order-details p.status {
+    font-weight: bold;
+    color: #4CAF50; /* Зелений колір для статусу */
 }
 
 .order-items {
@@ -201,26 +235,53 @@ h1 {
 form {
     margin-top: 15px;
     padding: 15px;
-    background-color: #f9f9f9; /* Светло-серый фон */
+    background-color: #f9f9f9;
     border-radius: 10px;
-    border: 1px solid #ddd; /* Светлая обводка */
+    border: 1px solid #ddd;
 }
 
-.to-main-page {
-    position: absolute;
-    display: inline-block;
-    text-align: center;
-    text-decoration: none;
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
     color: #333;
-    background-color: #ffffff;
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-size: 18px;
-    transition: background-color 0.3s ease;
 }
 
-.to-main-page:hover {
-    background-color: #f4f4f4; /* Легкий серый фон */
+form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #4CAF50; /* Зеленая граница */
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+form select:focus {
+    border-color: #45a049; /* Темно-зеленая граница при фокусе */
+    outline: none;
+}
+
+form button {
+    background-color: #4CAF50; /* Зеленый фон */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень для кнопки */
+}
+
+form button:hover {
+    background-color: #45a049; /* Темно-зеленый фон при наведении */
+}
+
+form button:active {
+    transform: scale(0.98); /* Легкое уменьшение кнопки при нажатии */
 }
 a.btn-back {
     display: inline-block;
@@ -236,4 +297,9 @@ a.btn-back {
 
 a.btn-back:hover {
     text-decoration: underline #555;
+}
+.canceled-order-label{
+    color: rgb(255, 57, 57);
+    font-size: 20px;
+    font-weight: 600;
 }

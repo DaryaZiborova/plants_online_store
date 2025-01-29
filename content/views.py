@@ -10,8 +10,6 @@ from orders.models import CartItem
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import os
 from django.core.files.storage import default_storage
-from content.forms import OrderStatusForm
-from datetime import datetime, timedelta
 
 
 def main_page(request):
@@ -221,76 +219,3 @@ def delete_plant(request, plant_id):
         plant.delete()
         messages.success(request, f"Рослину '{plant.plant_name}' успішно видалено.")
         return redirect('main_page')
-
-@user_passes_test(lambda u: u.is_staff)
-def admin_orders(request):
-    orders = Order.objects.all().order_by('user__email', 'order_date')
-    orders_by_user = {}
-
-    if request.method == 'POST':
-        order_id = request.POST.get('order_id')
-        if not order_id:
-            messages.error(request, "ID замовлення відсутній.")
-            return redirect('admin_orders')
-
-        try:
-            order = get_object_or_404(Order, order_id=order_id)
-
-            # Обновление даты доставки
-            if 'delivery_date' in request.POST:
-                try:
-                    delivery_date = request.POST.get('delivery_date')
-                    if delivery_date:
-                        delivery_date_parsed = datetime.strptime(delivery_date, "%Y-%m-%d")
-                        order.delivery_date = delivery_date_parsed
-                        order.save()
-                        messages.success(request, "Очікувану дату доставки встановлено.")
-                    else:
-                        messages.error(request, "Дата доставки не вказана.")
-                except ValueError as e:
-                    messages.error(request, f"Помилка: Невірний формат дати. {str(e)}")
-            
-            # Обновление статуса заказа
-            elif 'status' in request.POST:
-                new_status = request.POST.get('status')
-                if order.status == 'canceled':
-                    messages.error(request, "Замовлення скасоване. Зміна статусу неможлива.")
-                elif order.status == 'in_progress' and new_status == 'shipped':
-                    for item in order.items.all():
-                        plant = item.plant
-                        if plant.quantity_in_stock < item.quantity:
-                            messages.error(request, f"Недостатня кількість товару '{plant.plant_name}' на складі.")
-                            return redirect('admin_orders')
-                        plant.quantity_in_stock -= item.quantity
-                        plant.save()
-                    order.status = new_status
-                    order.save()
-                    messages.success(request, "Статус замовлення оновлено.")
-                elif order.status == 'shipped' and new_status == 'delivered':
-                    order.status = new_status
-                    order.save()
-                    messages.success(request, "Статус замовлення оновлено.")
-                elif new_status == 'canceled':
-                    order.status = new_status
-                    order.delivery_date = None  # Очистка даты доставки
-                    order.save()
-                    messages.success(request, "Замовлення скасовано.")
-                else:
-                    messages.error(request, "Недопустима дія для поточного статусу замовлення.")
-
-        except Exception as e:
-            messages.error(request, f"Помилка: {str(e)}")
-            return redirect('admin_orders')
-
-    # Групуємо замовлення за email користувача
-    for order in orders:
-        email = order.user.email
-        if email not in orders_by_user:
-            orders_by_user[email] = []
-        orders_by_user[email].append(order)
-
-    # Передаємо дані в шаблон
-    context = {
-        'orders_by_user': orders_by_user,
-    }
-    return render(request, 'orders/admin_orders.html', context)

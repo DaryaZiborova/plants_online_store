@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from .models import CartItem, Order, OrderItem
 from content.models import Plant
+from django.contrib.auth.decorators import login_required, user_passes_test
+from datetime import datetime
+from .documents import generate_pdf_receipt
+from django.http import JsonResponse
 
 # Додавання товару до кошика
 def add_to_cart(request, plant_id, q):
@@ -18,33 +21,29 @@ def add_to_cart(request, plant_id, q):
         defaults={"items_quantity": q},
     )
 
-    if q > 0:
-        if cart_item.items_quantity > plant.quantity_in_stock:
-            cart_item.items_quantity = plant.quantity_in_stock
+    if not created:
+        if q == 0:
+            cart_item.delete()
             return redirect(request.META.get('HTTP_REFERER'))
         
-        if cart_item.items_quantity == plant.quantity_in_stock:
+        if cart_item.items_quantity > plant.quantity_in_stock:
+            if plant.quantity_in_stock == 0:
+                cart_item.delete()
+            else:
+                cart_item.items_quantity = plant.quantity_in_stock
             return redirect(request.META.get('HTTP_REFERER'))
-    if q == 0:
-        cart_item.delete()
-        return redirect(request.META.get('HTTP_REFERER'))
     
-    if not created:
         cart_item.items_quantity += q
         if cart_item.items_quantity < 1:  
             cart_item.delete()
         else:
             cart_item.save()
-
+    
     return redirect(request.META.get('HTTP_REFERER'))
 
 # Перегляд кошика
+@login_required
 def cart_view(request):
-    if not request.user.is_authenticated:
-        messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб переглянути кошик.')
-        referer = request.META.get('HTTP_REFERER') or '/'  
-        return redirect(referer)
-
     cart_items = CartItem.objects.filter(user=request.user)
     user_cart = [
         {
@@ -93,7 +92,12 @@ def ordering_page(request):
         'buy_now': buy_now,
     })
 
+def download_receipt(request, order_id):
+    order = get_object_or_404(Order, order_id=order_id)
+    return generate_pdf_receipt(order)
+
 # Підтвердження замовлення
+@login_required
 def place_order(request):
     if request.method == 'POST':
         # Отримуємо дані з форми
@@ -103,24 +107,22 @@ def place_order(request):
         order_flat = request.POST.get('order_flat')
         payment_method = request.POST.get('payment_method')
 
+        # Створюємо нове замовлення
+        order = Order.objects.create(
+            user=request.user,
+            order_city=order_city,
+            order_street=order_street,
+            order_house=order_house,
+            order_flat=order_flat,
+            payment_method=payment_method
+        )
         # Перевіряємо, чи це "Купити зараз"
         buy_now = request.POST.get('buy_now') == 'true'
 
+        # Якщо це "Купити зараз", отримуємо товар з параметрів запиту
         if buy_now:
-            # Якщо це "Купити зараз", отримуємо товар з параметрів запиту
             plant_id = request.POST.get('plant_id')
             plant = get_object_or_404(Plant, plant_id=plant_id)
-
-            # Створюємо нове замовлення
-            order = Order.objects.create(
-                user=request.user,
-                order_city=order_city,
-                order_street=order_street,
-                order_house=order_house,
-                order_flat=order_flat,
-                total_price=plant.price,
-                payment_method=payment_method
-            )
 
             # Додаємо товар до замовлення
             OrderItem.objects.create(
@@ -129,31 +131,16 @@ def place_order(request):
                 quantity=1,
                 price=plant.price
             )
+            order.total_price = plant.price
+            order.save()
 
             messages.success(request, 'Замовлення успішно оформлено!')
-            return redirect('orders')  # Перенаправлення на сторінку замовлень
 
+        # Якщо це звичайне оформлення замовлення з кошика
         else:
-            # Якщо це звичайне оформлення замовлення з кошика
             cart_items = CartItem.objects.filter(user=request.user)
-            if not cart_items:
-                messages.warning(request, 'Ваш кошик порожній!')
-                return redirect('cart')
-
-            # Розраховуємо загальну суму замовлення
-            total_price = sum(item.items_quantity * item.plant.price for item in cart_items)
-
-            # Створюємо нове замовлення
-            order = Order.objects.create(
-                user=request.user,
-                order_city=order_city,
-                order_street=order_street,
-                order_house=order_house,
-                order_flat=order_flat,
-                total_price=total_price,
-                payment_method=payment_method
-            )
-
+            order.total_price = sum(item.items_quantity * item.plant.price for item in cart_items)
+            order.save()
             # Додаємо товари до замовлення
             for cart_item in cart_items:
                 OrderItem.objects.create(
@@ -162,19 +149,64 @@ def place_order(request):
                     quantity=cart_item.items_quantity,
                     price=cart_item.plant.price * cart_item.items_quantity
                 )
-
             # Очищаємо кошик після оформлення замовлення
             cart_items.delete()
 
             messages.success(request, 'Замовлення успішно оформлено!')
-            return redirect('orders')
 
-    # Якщо метод не POST, перенаправляємо на кошик
-    return redirect('cart')
+        return JsonResponse({"download_url": f"/download_receipt/{order.order_id}/", "redirect_url": "/orders/"})
 
 # Перегляд замовлень
 @login_required
 def orders_view(request):
-    # Отримуємо всі замовлення поточного користувача
     orders = Order.objects.filter(user=request.user).order_by('-order_date')
     return render(request, 'orders/orders.html', {'orders': orders})
+
+@user_passes_test(lambda u: u.is_staff)
+def admin_orders(request):
+    orders = Order.objects.all().order_by('-order_date', 'user__email')
+    orders_by_users = {}
+
+    if request.method == 'POST':
+        try:
+            order = get_object_or_404(Order, order_id=request.POST.get('order_id'))
+            if 'delivery_date' in request.POST:
+                delivery_date = request.POST.get('delivery_date')
+                delivery_date_parsed = datetime.strptime(delivery_date, "%Y-%m-%d")
+                order.delivery_date = delivery_date_parsed
+                order.save()
+                messages.success(request, "Очікувану дату доставки встановлено.")
+            
+            if 'status' in request.POST:
+                new_status = request.POST.get('status')
+                if order.status == 'in_progress' and new_status == 'shipped':
+                    for item in order.items.all():
+                        plant = item.plant
+                        if plant.quantity_in_stock < item.quantity:
+                            messages.error(request, f"Недостатня кількість товару '{plant.plant_name}' на складі.")
+                            return redirect('admin_orders')
+                        plant.quantity_in_stock -= item.quantity
+                        plant.save()
+                    #order.delivery_date = now
+                elif new_status == 'canceled':
+                    order.delivery_date = None  # Очистка даты доставки
+                    messages.success(request, "Замовлення скасовано.")
+                order.status = new_status
+                order.save()
+
+        except Exception as e:
+            messages.error(request, f"Помилка: {str(e)}")
+            return redirect('admin_orders')
+
+    # Групуємо замовлення за email користувача
+    for order in orders:
+        email = order.user.email
+        if email not in orders_by_users:
+            orders_by_users[email] = []
+        orders_by_users[email].append(order)
+
+    # Передаємо дані в шаблон
+    context = {
+        'orders_by_users': orders_by_users,
+    }
+    return render(request, 'orders/admin_orders.html', context)

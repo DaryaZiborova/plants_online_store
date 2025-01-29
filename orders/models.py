@@ -22,12 +22,12 @@ class Order(models.Model):
     order_street = models.CharField(max_length=100)  # Вулиця доставки
     order_house = models.CharField(max_length=10)  # Будинок доставки
     order_flat = models.CharField(max_length=10)  # Квартира доставки
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)  # Загальна сума замовлення
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)  # Загальна сума замовлення
     payment_method = models.CharField(max_length=50)  # Спосіб оплати
     promocode = models.CharField(max_length=100, null=True, blank=True)
     discount = models.IntegerField(default=0)
     order_date = models.DateTimeField(default=timezone.now)  # Дата замовлення
-    delivery_date = models.DateTimeField(default=timezone.now)
+    delivery_date = models.DateTimeField(default=timezone.now, null=True, blank=True)
 
     STATUS_CHOICES = [
         ('in_progress', 'В обробці'),

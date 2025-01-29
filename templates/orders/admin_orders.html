@@ -4,15 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Всі замовлення</title>
-    <link rel="stylesheet" href="{% static 'orders/admin_orders.css' %}">
+    <link rel="stylesheet" href="{% static 'orders/orders.css' %}">
 </head>
 <body>
-    <a href="{% url 'main_page' %}" class="to-main-page">&larr; На головну</a>
+    <header>
+        <div class="nav-buttons">
+            <a href="{% url 'main_page' %}">На головну</a>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}">Увійти</a>
+            {% endif %}
+        </div>
+    </header>
     <div class="orders-container">
         <h1>Всі замовлення</h1>
 
-        {% if orders_by_user %}
-            {% for email, orders in orders_by_user.items %}
+        {% if orders_by_users %}
+            {% for email, orders in orders_by_users.items %}
                 <div class="user-orders">
                     <h2>Замовлення для {{ email }}</h2>
                     {% for order in orders %}
@@ -24,18 +31,11 @@
                             <div class="order-details">
                                 <p><strong>Спосіб оплати:</strong> {{ order.payment_method }}</p>
                                 <p><strong>Адреса доставки:</strong> {{ order.order_city }}, {{ order.order_street }}, {{ order.order_house }}, кв. {{ order.order_flat }}</p>
-                                <p><strong>Статус замовлення:</strong> {{ order.get_status_display }}</p>
-                                <p><strong>Очікувана дата доставки:</strong> 
-                                    {% if order.status == 'canceled' %}
-                                        Замовлення скасовано.
-                                    {% elif order.status == 'in_progress' %}
-                                        Очікує відправлення.
-                                    {% elif order.delivery_date %}
-                                        {{ order.delivery_date|date:"d.m.Y" }}
-                                    {% else %}
-                                        Ще не встановлено.
+                                    {% if order.status == 'shipped' %}
+                                    <p><strong>Очікувана дата доставки:</strong> {{ order.delivery_date|date:"d.m.Y" }} </p>
+                                    {% elif order.status == 'delivered' %}
+                                    <p style="color: #4CAF50;"><strong>Замовлення доставлено {{ order.delivery_date|date:"d.m.Y" }}</strong></p>
                                     {% endif %}
-                                </p>
                             </div>
                             <div class="order-items">
                                 <h4>Товари:</h4>
@@ -65,12 +65,15 @@
                                     <label for="id_status">Статус:</label>
                                     <select name="status" id="id_status">
                                         {% if order.status == 'in_progress' %}
+                                            <option value="in_progress">В обробке</option>
                                             <option value="shipped">Відправлено</option>
                                             <option value="canceled">Скасовано</option>
                                         {% elif order.status == 'shipped' %}
+                                            <option value="shipped">Відправлено</option>
                                             <option value="delivered">Доставлено</option>
                                             <option value="canceled">Скасовано</option>
                                         {% elif order.status == 'delivered' %}
+                                            <option value="delivered">Доставлено</option>
                                             <option value="canceled">Скасовано</option>
                                         {% endif %}
                                     </select>
@@ -86,7 +89,7 @@
                                     </form>
                                 {% endif %}
                             {% else %}
-                                <p>Замовлення скасоване. Зміна статусу неможлива.</p>
+                                <p class="canceled-order-label">Замовлення скасоване. Зміна статусу неможлива.</p>
                             {% endif %}
                         </div>
                     {% endfor %}

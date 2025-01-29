@@ -41,5 +41,6 @@ urlpatterns = [
     path('plant/<int:plant_id>/delete', views.delete_plant, name='delete_plant'),
     path('create-new-plant/', views.create_plant, name='create_plant'),
     path('plant/<int:plant_id>/edit', views.update_plant, name='edit_plant'),
-    path('admin-orders/', views.admin_orders, name='admin_orders'),
+    path('admin-orders/', ord_views.admin_orders, name='admin_orders'),
+    path('download_receipt/<int:order_id>/', ord_views.download_receipt, name='download_receipt'),
 ]

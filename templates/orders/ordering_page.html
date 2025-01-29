@@ -9,7 +9,7 @@
 <body>
     <div class="ordering-container">
         <h1>Оформлення замовлення</h1>
-        <form method="post" action="{% url 'place_order' %}">
+        <form method="post" id="order-form" action="{% url 'place_order' %}">
             {% csrf_token %}
             <!-- Приховані поля для передачі параметрів -->
             <input type="hidden" name="buy_now" {% if buy_now %} value="true" {% else %} value="false" {% endif %}>
@@ -19,19 +19,19 @@
         
             <div class="form-group">
                 <label for="order_city">Місто:</label>
-                <input type="text" id="order_city" name="order_city" required>
+                <input type="text" id="order_city" name="order_city" value="{{user.city}}" required>
             </div>
             <div class="form-group">
                 <label for="order_street">Вулиця:</label>
-                <input type="text" id="order_street" name="order_street" required>
+                <input type="text" id="order_street" name="order_street" value="{{user.street}}" required>
             </div>
             <div class="form-group">
                 <label for="order_house">Будинок:</label>
-                <input type="text" id="order_house" name="order_house" required>
+                <input type="text" id="order_house" name="order_house" value="{{user.house}}" required>
             </div>
             <div class="form-group">
                 <label for="order_flat">Квартира:</label>
-                <input type="text" id="order_flat" name="order_flat" required>
+                <input type="text" id="order_flat" name="order_flat" value="{{user.flat}}" required>
             </div>
             <div class="form-group">
                 <label for="payment_method">Спосіб оплати:</label>
@@ -82,3 +82,34 @@
         <a href="javascript:history.back()" class="btn-back">&larr; Скасувати</a>
     </div>
 </body>
+
+<script>
+    document.getElementById("order-form").addEventListener("submit", function(event) {
+        event.preventDefault(); 
+    
+        let formData = new FormData(this);
+        
+        fetch("{% url 'place_order' %}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.download_url) {
+                let downloadLink = document.createElement("a");
+                downloadLink.href = data.download_url;
+                downloadLink.download = "";  
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+
+                setTimeout(() => {
+                    window.location.href = data.redirect_url;
+                }, 1000);
+            }
+        })
+    });
+</script>

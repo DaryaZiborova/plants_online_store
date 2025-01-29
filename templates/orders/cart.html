@@ -7,7 +7,14 @@
     <link rel="stylesheet" href="{% static 'orders/cart.css' %}">
 </head>
 <body>
-    <a href="{% url 'main_page' %}" class="to-main-page">&larr;  На головну</a>
+    <header>
+        <div class="nav-buttons">
+            <a href="{% url 'main_page' %}">На головну</a>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}">Увійти</a>
+            {% endif %}
+        </div>
+    </header>
     <div class="cart-container">
         <h1>Ваш Кошик</h1>
 

@@ -18,9 +18,9 @@
             </form>
             {% if user.is_staff %}
             <a href="{% url 'user_rights' %}" class="admin-tool-link">
-                <img src="{% static 'content/admin_tools.png' %}" class="admin-tool">
+                <img src="{% static 'content/admin-tools.png' %}" class="admin-tool">
             </a>
-            <a href="{% url 'user_rights' %}" class="admin-tool-link" id="deliveries">
+            <a href="{% url 'admin_orders' %}" class="admin-tool-link" id="deliveries">
                 <img src="{% static 'content/deliveries.png' %}" class="admin-tool">
             </a>
             {% endif %}
@@ -29,7 +29,7 @@
             {% if user.is_authenticated %}
                 <a href="{% url 'cart' %}">Кошик</a>
                 {% if user.is_staff %}
-                    <a href="{% url 'admin_orders' %}">Замовлення</a>
+                    <a href="{% url 'orders' %}">Замовлення</a>
                 {% else %}
                     <a href="{% url 'orders' %}">Замовлення</a>
                 {% endif %}
