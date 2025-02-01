@@ -201,3 +201,14 @@ input[type="number"]::-webkit-outer-spin-button {
     width: 40px;
     height: 40px;
 }
+
+#download-plant-docx{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 16px;
+    text-decoration: none;
+    font-style: italic;
+    color:#555;
+}
+#download-plant-docx:hover{
+    color: #4b4bff;
+}

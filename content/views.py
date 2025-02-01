@@ -219,3 +219,9 @@ def delete_plant(request, plant_id):
         plant.delete()
         messages.success(request, f"Рослину '{plant.plant_name}' успішно видалено.")
         return redirect('main_page')
+
+from .info_docx import generate_docx
+
+def download_plant_docx(request, plant_id):
+    plant = get_object_or_404(Plant, plant_id=plant_id)
+    return generate_docx(plant)

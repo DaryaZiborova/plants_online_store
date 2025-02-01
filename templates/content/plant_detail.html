@@ -84,6 +84,11 @@
                     
                 </div>
                 <p class="quantity">У наявності: {{ plant.quantity_in_stock }} шт.</p>
+                {% if plant.additional_info %}
+                <a href="{% url 'download_plant_docx' plant.plant_id %}" id="download-plant-docx">
+                    📄 Додаткова інформація
+                </a>
+                {% endif %}
         </div>
     </div>
 
