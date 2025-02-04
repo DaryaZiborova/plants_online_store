@@ -91,7 +91,7 @@ h1 {
 .nav-buttons {
     margin-left: auto;
     display: flex;
-    align-items: center; /* Вирівнюємо всі елементи по центру вертикально */
+    align-items: center; 
     gap: 10px; 
     border: none; 
 }

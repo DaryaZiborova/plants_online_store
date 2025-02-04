@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib import messages  # Додано для повідомлень
+from django.contrib import messages  
 from .forms import RegisterForm, LoginByEmailForm
 from django.contrib.auth import authenticate, login, logout
 from .models import User
@@ -46,7 +46,7 @@ def login_by_email(request):
             user = authenticate(request, email=email, password=password)
             if user:
                 login(request, user)
-                messages.success(request, 'Ви успішно увійшли в систему.')  # Повідомлення про успішний вхід
+                messages.success(request, 'Ви успішно увійшли в систему.') 
                 return redirect('main_page')
             else:
                 form.add_error('password', 'Невірний пароль')
