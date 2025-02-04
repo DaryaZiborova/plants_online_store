@@ -215,7 +215,9 @@ h1 {
 .form-group input{
     width: 97%;
 }
-
+.form-group input::placeholder {
+    color: #9d9d9d; 
+}
 .btn-submit {
     background-color: #4CAF50;
     color: white;

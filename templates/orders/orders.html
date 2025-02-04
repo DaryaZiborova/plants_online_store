@@ -54,7 +54,11 @@
                                 </li>
                             {% endfor %}
                         </ul>
+                        {% if order.discount %}
+                        <p class="order-total"><strong>Загальна сума (з урахуванням знижки {{order.discount}}%):</strong> {{ order.discounted_total_price }} грн</p>
+                        {% else %}
                         <p class="order-total"><strong>Загальна сума:</strong> {{ order.total_price }} грн</p>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import CartItem, Order, OrderItem
+from .models import CartItem, Order, OrderItem, Promocode
 from content.models import Plant
 from django.contrib.auth.decorators import login_required, user_passes_test
 from datetime import datetime
@@ -106,7 +106,14 @@ def place_order(request):
         order_house = request.POST.get('order_house')
         order_flat = request.POST.get('order_flat')
         payment_method = request.POST.get('payment_method')
+        promocode = request.POST.get('promocode')
 
+        PROMOCODES = {promo.promocode: promo.discount_value for promo in Promocode.objects.all()}
+        if promocode in PROMOCODES:
+            discount = PROMOCODES.get(promocode, 0)
+        else:
+            promocode = None
+            discount = 0
         # Створюємо нове замовлення
         order = Order.objects.create(
             user=request.user,
@@ -114,7 +121,9 @@ def place_order(request):
             order_street=order_street,
             order_house=order_house,
             order_flat=order_flat,
-            payment_method=payment_method
+            payment_method=payment_method,
+            promocode=promocode,
+            discount=discount,
         )
         # Перевіряємо, чи це "Купити зараз"
         buy_now = request.POST.get('buy_now') == 'true'
@@ -132,7 +141,6 @@ def place_order(request):
                 price=plant.price
             )
             order.total_price = plant.price
-            order.save()
 
             messages.success(request, 'Замовлення успішно оформлено!')
 
@@ -140,7 +148,6 @@ def place_order(request):
         else:
             cart_items = CartItem.objects.filter(user=request.user)
             order.total_price = sum(item.items_quantity * item.plant.price for item in cart_items)
-            order.save()
             # Додаємо товари до замовлення
             for cart_item in cart_items:
                 OrderItem.objects.create(
@@ -153,6 +160,11 @@ def place_order(request):
             cart_items.delete()
 
             messages.success(request, 'Замовлення успішно оформлено!')
+        if discount == 0:
+            order.discounted_total_price = order.total_price
+        else:
+            order.discounted_total_price = round(order.total_price * (100-order.discount) / 100, 2)
+        order.save()
 
         return JsonResponse({"download_url": f"/download_receipt/{order.order_id}/", "redirect_url": "/orders/"})
 
@@ -210,3 +222,23 @@ def admin_orders(request):
         'orders_by_users': orders_by_users,
     }
     return render(request, 'orders/admin_orders.html', context)
+
+@user_passes_test(lambda u: u.is_staff)
+def promocode_management(request):
+    if request.method == 'POST':
+        promocode = request.POST.get('promocode').strip()
+        discount_value = request.POST.get('discount_value')
+        if Promocode.objects.filter(promocode=promocode).exists():
+            messages.error(request, "Цей промокод вже існує")
+        else:
+            Promocode.objects.create(promocode=promocode, discount_value=discount_value)
+
+    promocodes = Promocode.objects.all()
+    return render(request, 'orders/promocode_management.html', {"promocodes": promocodes})
+
+@user_passes_test(lambda u: u.is_staff)
+def delete_promocode(request):
+    id = request.POST.get('promocode_id')
+    promo = get_object_or_404(Promocode, pk=id)
+    promo.delete()
+    return redirect('promocode_management') 

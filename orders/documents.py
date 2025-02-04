@@ -7,9 +7,6 @@ from django.contrib.staticfiles import finders
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-def get_final_price(order):
-    return round(order.total_price - (order.total_price*order.discount / 100), 2)
-
 DejaVuSans = finders.find('fonts/DejaVuSans.ttf')
 DejaVuSans_bold = finders.find('fonts/DejaVuSans-Bold.ttf')
 pdfmetrics.registerFont(TTFont('DejaVuSans', DejaVuSans))
@@ -62,7 +59,7 @@ def generate_pdf_receipt(order):
         else:
             pdf.drawString(50, y, f"ЗНИЖКА: {order.discount}%")
         y -= 20
-        pdf.drawString(50, y, f"ЗАГАЛЬНА ВАРТІСТЬ ІЗ ЗНИЖКОЮ: {get_final_price(order)} грн")
+        pdf.drawString(50, y, f"ЗАГАЛЬНА ВАРТІСТЬ ІЗ ЗНИЖКОЮ: {order.discounted_total_price} грн")
     y -= 20
     pdf.drawString(50, y, f"СПОСІБ ОПЛАТИ: {order.payment_method}")
 

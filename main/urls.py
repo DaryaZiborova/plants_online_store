@@ -30,4 +30,6 @@ urlpatterns = [
     path('download_receipt/<int:order_id>/', ord_views.download_receipt, name='download_receipt'),
     path('download-plant/<int:plant_id>/', views.download_plant_docx, name='download_plant_docx'),
     path('statistics/', views.statistics_view, name='statistics_page'),
+    path('promocodes/', ord_views.promocode_management, name='promocode_management'),
+    path('delete-promocode/', ord_views.delete_promocode, name='delete_promocode'),
 ]

@@ -23,6 +23,7 @@ class Order(models.Model):
     order_house = models.CharField(max_length=10)  # Будинок доставки
     order_flat = models.CharField(max_length=10)  # Квартира доставки
     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)  # Загальна сума замовлення
+    discounted_total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     payment_method = models.CharField(max_length=50)  # Спосіб оплати
     promocode = models.CharField(max_length=100, null=True, blank=True)
     discount = models.IntegerField(default=0)
@@ -52,6 +53,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
+    order_item_id = models.AutoField(primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')  # Зв'язок з замовленням
     plant = models.ForeignKey(Plant, on_delete=models.CASCADE, to_field='plant_id')  # Зв'язок з товаром
     quantity = models.IntegerField()  # Кількість товару
@@ -59,3 +61,11 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.plant.plant_name} (Order #{self.order.order_id})"
+    
+class Promocode(models.Model):
+    promocode_id = models.AutoField(primary_key=True)
+    promocode = models.CharField(max_length=100)
+    discount_value = models.IntegerField() 
+
+    def __str__(self):
+        return self.promocode

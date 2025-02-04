@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="uk">
+{% load static %}
+{% load filters %}
+<head>
+    <meta charset="UTF-8">
+    <title>{{ plant.plant_name }}</title>
+    <link rel="stylesheet" href="{% static 'orders/promocodes.css' %}">
+</head>
+<body>
+    <header>
+        <div class="nav-buttons">
+            <a href="{% url 'main_page' %}">На головну</a>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}">Увійти</a>
+            {% endif %}
+        </div>
+    </header>
+    <div class="container">
+        <h1>Керування промокодами</h1>
+        <table class="promo-table">
+            {% for promo in promocodes %}
+            <tr>
+                <td class="promocode">{{ promo.promocode }}</td>
+                <td>{{ promo.discount_value }}%</td>
+                <td>
+                    <form method="post" action="{% url 'delete_promocode' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="promocode_id" value="{{ promo.promocode_id }}">
+                        <button type="submit" name="delete_promocode" class="delete-btn">Видалити</button>
+                    </form>
+                </td>
+            </tr>
+            {% if not forloop.last %}
+            <tr><td colspan="3"><hr class="row-divider"></td></tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+        <button id="add-promocode">+</button>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h2>Додати новий промокод</h2>
+            <form id="promo-form" method="post" action="{% url 'promocode_management' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="new_promocode">Промокод:</label>
+                    <input type="text" id="new_promocode" name="promocode" required>
+                </div>
+                <div class="form-group">
+                    <label for="discount_value">Знижка(%):</label>
+                    <input type="number" id="discount_value" name="discount_value" min="1" max="100" required>
+                </div>
+                <button type="submit" class="submit-btn">Додати</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const popup = document.getElementById("popup");
+            const addButton = document.getElementById("add-promocode");
+            const closeButton = document.querySelector(".close-btn");
+
+            addButton.addEventListener("click", function () {
+                popup.style.display = "flex";
+            });
+
+            closeButton.addEventListener("click", function () {
+                popup.style.display = "none";
+            });
+
+            window.addEventListener("click", function (event) {
+                if (event.target === popup) {
+                    popup.style.display = "none";
+                }
+            });
+        });
+        </script>
+
+</body>

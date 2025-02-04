@@ -166,7 +166,7 @@ def update_plant(request, plant_id):
             if plant.photo:  
                 if default_storage.exists(f'plants/{plant.photo}'):
                     default_storage.delete(f'plants/{plant.photo}')
-            plant.photo = photo_name
+            plant.photo = None
 
         plant.save()
         return redirect('plant_detail', plant_id=plant_id)
@@ -231,7 +231,7 @@ def download_plant_docx(request, plant_id):
 def statistics_view(request):
     total_users = User.objects.count()
     total_orders = Order.objects.count()
-    total_revenue = Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    total_revenue = round(Order.objects.filter(status__in=['delivered', 'shipped']).aggregate(Sum('discounted_total_price'))['discounted_total_price__sum'], 2) or 0
     canceled_orders = Order.objects.filter(status='canceled').count() 
 
     category_stats = (

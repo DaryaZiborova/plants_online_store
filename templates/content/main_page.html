@@ -17,15 +17,23 @@
                 <div id="autocomplete-results"></div> 
             </form>
             {% if user.is_staff %}
-                <a href="{% url 'user_rights' %}" class="admin-tool-link">
+            <div class="admin-tools">
+                <a href="{% url 'user_rights' %}">
                     <img src="{% static 'content/admin-tools.png' %}" class="admin-tool">
                 </a>
-                <a href="{% url 'admin_orders' %}" class="admin-tool-link">
+                <div class="vertical-line"></div>
+                <a href="{% url 'admin_orders' %}">
                     <img src="{% static 'content/deliveries.png' %}" class="admin-tool">
                 </a>
-                <a href="{% url 'statistics_page' %}" class="admin-tool-link">
+                <div class="vertical-line"></div>
+                <a href="{% url 'statistics_page' %}">
                     <img src="{% static 'content/statistics.png' %}" class="admin-tool">
                 </a>
+                <div class="vertical-line"></div>
+                <a href="{% url 'promocode_management' %}">
+                    <img src="{% static 'content/promocodes.png' %}" class="admin-tool">
+                </a>
+            </div>
             {% endif %}
             <!-- Кнопки "Кошик" та "Увійти" -->
             <div class="nav-buttons">
