@@ -5,11 +5,12 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required, user_passes_test
 from content.models import Plant, Supplier, Plant_genus
 from authentication.models import User
-from orders.models import Order 
+from orders.models import Order, OrderItem
 from orders.models import CartItem
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import os
 from django.core.files.storage import default_storage
+from django.db.models import Count, Sum, F
 
 
 def main_page(request):
@@ -225,3 +226,43 @@ from .info_docx import generate_docx
 def download_plant_docx(request, plant_id):
     plant = get_object_or_404(Plant, plant_id=plant_id)
     return generate_docx(plant)
+
+@user_passes_test(lambda u: u.is_staff)
+def statistics_view(request):
+    total_users = User.objects.count()
+    total_orders = Order.objects.count()
+    total_revenue = Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    canceled_orders = Order.objects.filter(status='canceled').count() 
+
+    # Определяем категории, на которые приходится больше всего заказов
+    category_stats = (
+        OrderItem.objects
+        .values(category=F('plant__category'))  # Группировка по категории растений
+        .annotate(total_sold=Sum('quantity'))  # Считаем общее количество проданных растений в каждой категории
+        .order_by('-total_sold')  # Сортируем по убыванию
+    )
+
+    supplier_ranking = (
+    Supplier.objects
+    .annotate(total_plants=Count('plant'))  # Подсчёт количества растений у поставщика
+    .order_by('-total_plants')  # Сортировка по убыванию
+    )
+
+
+    # Вычисляем общий объем продаж всех растений
+    total_sold_items = sum(item['total_sold'] for item in category_stats)
+
+    # Добавляем процентное соотношение к каждой категории
+    for category in category_stats:
+        category['percentage'] = round((category['total_sold'] / total_sold_items) * 100, 2) if total_sold_items > 0 else 0
+
+    context = {
+        'total_users': total_users,
+        'total_orders': total_orders,
+        'total_revenue': total_revenue,
+        'canceled_orders': canceled_orders,
+        'category_stats': category_stats,
+        'supplier_ranking': supplier_ranking,
+    }
+
+    return render(request, 'content/statistics.html', context)

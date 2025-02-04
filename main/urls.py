@@ -44,4 +44,5 @@ urlpatterns = [
     path('admin-orders/', ord_views.admin_orders, name='admin_orders'),
     path('download_receipt/<int:order_id>/', ord_views.download_receipt, name='download_receipt'),
     path('download-plant/<int:plant_id>/', views.download_plant_docx, name='download_plant_docx'),
+    path('statistics/', views.statistics_view, name='statistics_page'),
 ]
