@@ -336,7 +336,7 @@ input[type="checkbox"] {
 .admin-tool {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Сохраняет пропорции изображений */
+    object-fit: contain; 
 }
 
 .admin-tool-link {
@@ -345,5 +345,5 @@ input[type="checkbox"] {
     justify-content: center;
     width: 40px;
     height: 40px;
-    margin: 0 5px; /* Отступы между иконками */
+    margin: 0 5px; 
 }

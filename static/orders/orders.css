@@ -2,7 +2,7 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9; /* Светло-серый фон */
+    background-color: #f9f9f9; 
 }
 header {
     background-color: #4CAF50;
@@ -16,7 +16,7 @@ header {
     margin-left: auto;
     margin-right: 0;
     display: flex;
-    align-items: center; /* Вирівнюємо всі елементи по центру вертикально */
+    align-items: center; 
     gap: 10px; 
     border: none; 
 }
@@ -44,21 +44,21 @@ header {
     padding: 20px;
     background-color: white;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 h1 {
     text-align: center;
-    color: #333; /* Темно-серый */
+    color: #333; 
     margin-bottom: 20px;
 }
 
 .user-orders {
     margin-bottom: 30px;
     padding: 15px;
-    background-color: #f9f9f9; /* Светло-серый фон */
+    background-color: #f9f9f9; 
     border-radius: 10px;
-    border: 1px solid #ddd; /* Светлая обводка */
+    border: 1px solid #ddd; 
 }
 
 .user-orders h2 {
@@ -67,11 +67,11 @@ h1 {
 }
 
 .order-block {
-    border: 1px solid #ddd; /* Светлая обводка */
+    border: 1px solid #ddd; 
     border-radius: 10px;
     padding: 15px;
     margin-bottom: 20px;
-    background-color: #fff; /* Белый фон */
+    background-color: #fff;
 }
 
 .order-header {
@@ -87,22 +87,22 @@ h1 {
 
 .order-date {
     margin: 0;
-    color: #777; /* Средне-серый */
+    color: #777; 
     font-size: 14px;
 }
 
 .order-details {
-    margin-bottom: 30px; /* Увеличенный отступ снизу */
+    margin-bottom: 30px; 
 }
 .order-details p {
     margin: 5px 0;
     color: #555;
-    text-align: left; /* Вирівнюємо текст зліва */
+    text-align: left; 
 }
 
 .order-details p.status {
     font-weight: bold;
-    color: #4CAF50; /* Зелений колір для статусу */
+    color: #4CAF50; 
 }
 
 .order-items {
@@ -124,7 +124,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     padding: 5px 0;
-    border-bottom: 1px solid #eee; /* Очень светлая граница */
+    border-bottom: 1px solid #eee;
 }
 
 .order-items li:last-child {
@@ -144,7 +144,7 @@ h1 {
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid #ddd;
-    background-color: #f4f4f4; /* Легкий фон */
+    background-color: #f4f4f4; 
 }
 
 .empty-frame {
@@ -171,7 +171,7 @@ h1 {
 .item-price {
     text-align: left;
     width: 120px;
-    color: #4CAF50; /* Зеленый */
+    color: #4CAF50; 
     font-weight: bold;
 }
 
@@ -201,7 +201,7 @@ h1 {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    font-family: Arial, sans-serif; /* Звичайний шрифт для міток */
+    font-family: Arial, sans-serif;
 }
 
 .form-group input, .form-group select {
@@ -210,7 +210,7 @@ h1 {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
-    font-family: Arial, sans-serif; /* Звичайний шрифт для полів введення */
+    font-family: Arial, sans-serif; 
 }
 .form-group input{
     width: 97%;
@@ -225,13 +225,13 @@ h1 {
     cursor: pointer;
     font-size: 16px;
     width: 100%;
-    font-family: Arial, sans-serif; /* Звичайний шрифт для кнопки */
+    font-family: Arial, sans-serif; 
 }
 
 .btn-submit:hover {
     background-color: #45a049;
 }
-/* Стили для формы изменения статуса */
+
 form {
     margin-top: 15px;
     padding: 15px;
@@ -250,7 +250,7 @@ form label {
 form select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #4CAF50; /* Зеленая граница */
+    border: 1px solid #4CAF50; 
     border-radius: 5px;
     font-size: 14px;
     background-color: #fff;
@@ -259,12 +259,12 @@ form select {
 }
 
 form select:focus {
-    border-color: #45a049; /* Темно-зеленая граница при фокусе */
+    border-color: #45a049; 
     outline: none;
 }
 
 form button {
-    background-color: #4CAF50; /* Зеленый фон */
+    background-color: #4CAF50; 
     color: white;
     padding: 10px 20px;
     border: none;
@@ -273,15 +273,15 @@ form button {
     font-size: 16px;
     margin-top: 10px;
     transition: background-color 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень для кнопки */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
 }
 
 form button:hover {
-    background-color: #45a049; /* Темно-зеленый фон при наведении */
+    background-color: #45a049; 
 }
 
 form button:active {
-    transform: scale(0.98); /* Легкое уменьшение кнопки при нажатии */
+    transform: scale(0.98); 
 }
 a.btn-back {
     display: inline-block;

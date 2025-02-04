@@ -234,25 +234,22 @@ def statistics_view(request):
     total_revenue = Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
     canceled_orders = Order.objects.filter(status='canceled').count() 
 
-    # Определяем категории, на которые приходится больше всего заказов
     category_stats = (
         OrderItem.objects
-        .values(category=F('plant__category'))  # Группировка по категории растений
-        .annotate(total_sold=Sum('quantity'))  # Считаем общее количество проданных растений в каждой категории
-        .order_by('-total_sold')  # Сортируем по убыванию
+        .values(category=F('plant__category'))  
+        .annotate(total_sold=Sum('quantity'))  
+        .order_by('-total_sold')  
     )
 
     supplier_ranking = (
     Supplier.objects
-    .annotate(total_plants=Count('plant'))  # Подсчёт количества растений у поставщика
-    .order_by('-total_plants')  # Сортировка по убыванию
+    .annotate(total_plants=Count('plant'))  
+    .order_by('-total_plants')  
     )
 
-
-    # Вычисляем общий объем продаж всех растений
     total_sold_items = sum(item['total_sold'] for item in category_stats)
 
-    # Добавляем процентное соотношение к каждой категории
+    
     for category in category_stats:
         category['percentage'] = round((category['total_sold'] / total_sold_items) * 100, 2) if total_sold_items > 0 else 0
 
