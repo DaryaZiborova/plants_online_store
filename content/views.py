@@ -75,25 +75,6 @@ def plant_detail(request, plant_id):
     # Отримуємо постачальника та рід рослини з перевіркою на 404
     supplier = get_object_or_404(Supplier, supplier_id=plant.supplier_id)  
     genus = get_object_or_404(Plant_genus, plant_genus_id=plant.genus_id)  
-    
-    # Обробка форми (кнопки "Купити" та "До кошика")
-    if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 1))  # Отримуємо кількість з форми
-        action = request.POST.get('action')  # Отримуємо дію (купити або до кошика)
-
-        # Перевірка, щоб кількість не перевищувала доступну
-        if quantity > plant.quantity_in_stock:
-            messages.error(request, "Недостатня кількість товару на складі.")
-        else:
-            if action == 'buy':
-                # Логіка для покупки
-                messages.success(request, f"Ви придбали {quantity} шт. {plant.plant_name}.")
-                return redirect('main_page')
-            elif action == 'add_to_cart':
-                # Логіка для додавання до кошика
-                messages.success(request, f"Додано {quantity} шт. {plant.plant_name} до кошика.")
-                return redirect('main_page')
-
     cart_items_dict = {}
     if request.user.is_authenticated:
         user_cart_items = CartItem.objects.filter(user=request.user).values_list('plant_id', 'items_quantity')
@@ -167,8 +148,9 @@ def update_plant(request, plant_id):
                 if default_storage.exists(f'plants/{plant.photo}'):
                     default_storage.delete(f'plants/{plant.photo}')
             plant.photo = None
-
+        
         plant.save()
+        messages.success(request, 'Зміни успішно збережено!')
         return redirect('plant_detail', plant_id=plant_id)
     context = {
                'plant': plant,
@@ -199,8 +181,9 @@ def create_plant(request):
             plant.photo = photo_name
 
         plant.save()
+        messages.success(request, f"Додано нову рослину '{plant.plant_name}'!")
         return redirect('plant_detail', plant_id=plant.plant_id) 
-
+        
     context = {
         'genuses': Plant_genus.objects.all(),
         'suppliers': Supplier.objects.all(),
@@ -218,7 +201,7 @@ def delete_plant(request, plant_id):
                 default_storage.delete(photo_path)
 
         plant.delete()
-        messages.success(request, f"Рослину '{plant.plant_name}' успішно видалено.")
+        messages.info(request, f"Рослину '{plant.plant_name}' успішно видалено.")
         return redirect('main_page')
 
 from .info_docx import generate_docx

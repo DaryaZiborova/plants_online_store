@@ -4,8 +4,8 @@
 {% load filters %}
 <head>
     <meta charset="UTF-8">
-    <title>{{ plant.plant_name }}</title>
-    <link rel="stylesheet" href="{% static 'orders/promocodes.css' %}">
+    <title>Керування промокодами</title>
+    <link rel="stylesheet" href="{% static 'css/promocodes.css' %}">
 </head>
 <body>
     <header>
@@ -41,7 +41,7 @@
 
     <div class="popup" id="popup">
         <div class="popup-content">
-            <span class="close-btn">&times;</span>
+            <span class="close-btn-promocode">&times;</span>
             <h2>Додати новий промокод</h2>
             <form id="promo-form" method="post" action="{% url 'promocode_management' %}">
                 {% csrf_token %}
@@ -57,26 +57,14 @@
             </form>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const popup = document.getElementById("popup");
-            const addButton = document.getElementById("add-promocode");
-            const closeButton = document.querySelector(".close-btn");
-
-            addButton.addEventListener("click", function () {
-                popup.style.display = "flex";
-            });
-
-            closeButton.addEventListener("click", function () {
-                popup.style.display = "none";
-            });
-
-            window.addEventListener("click", function (event) {
-                if (event.target === popup) {
-                    popup.style.display = "none";
-                }
-            });
-        });
-        </script>
-
+    {% if messages %}
+    <div id="popup-message" class="popup-message">
+        <span class="close-btn">&times;</span>
+        {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <script src="{% static 'scripts/add_promocode.js' %}"></script>
+    <script src="{% static 'scripts/popup_messages.js' %}"></script>
 </body>

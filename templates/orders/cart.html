@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Кошик</title>
-    <link rel="stylesheet" href="{% static 'orders/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
 </head>
 <body>
     <header>
@@ -52,7 +52,7 @@
                             <form action="{% url 'add_to_cart' item.plant.plant_id 0 %}" method="POST" style="display: inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="delete-cart-item">
-                                    <img id="delete" src="{% static 'content/delete.png' %}">
+                                    <img id="delete" src="{% static 'images/delete.png' %}">
                                 </button>
                             </form>
                         </div>

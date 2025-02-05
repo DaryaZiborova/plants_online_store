@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Всі замовлення</title>
-    <link rel="stylesheet" href="{% static 'orders/orders.css' %}">
+    <link rel="stylesheet" href="{% static 'css/orders.css' %}">
 </head>
 <body>
     <header>
@@ -23,7 +23,10 @@
                 <div class="user-orders">
                     <h2>Замовлення для {{ email }}</h2>
                     {% for order in orders %}
-                        <div class="order-block">
+                        <div class="order-block" 
+                        {% if order.status == 'delivered' %} style="background-color: #eaf1ea;"
+                        {% elif order.status == 'canceled' %} style="background-color: #ffecec;"
+                        {% endif %}>
                             <div class="order-header">
                                 <h3>Замовлення №{{ order.order_id }}</h3>
                                 <p class="order-date">Дата: {{ order.order_date|date:"d.m.Y" }}</p>
@@ -62,38 +65,42 @@
                                 {% endif %}
                             </div>
                             <!-- Форма для изменения статуса заказа -->
-                            {% if order.status != 'canceled' %}
+                            
+                            <form method="post" action="{% url 'admin_orders' %}" 
+                            {% if order.status == 'canceled' %} style="background-color: #fbe8e8; border: solid 1px #e4d0d0;" 
+                            {% elif order.status == 'delivered' %} style="background-color: #e4f0e4;; border: solid 1px #c7d9c6;"
+                            {% endif %}>
+                                {% csrf_token %}
+                                <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                                <label for="id_status">Статус:</label>
+                                {% if order.status == 'in_progress' %}
+                                <select name="status" id="id_status">
+                                    <option value="in_progress">В обробці</option>
+                                    <option value="shipped">Відправлено</option>
+                                    <option value="canceled">Скасовано</option>
+                                </select>
+                                <button type="submit">Оновити статус</button>
+                                {% elif order.status == 'shipped' %}
+                                <select name="status" id="id_status">
+                                    <option value="shipped">Відправлено</option>
+                                    <option value="delivered">Доставлено</option>
+                                </select>
+                                <button type="submit">Оновити статус</button>
+                                {% else %}
+                                <select name="status" id="id_status" disabled="true">
+                                    <option value="{{order.status}}">{{ order.get_status_display  }}</option>
+                                </select>
+                                <button type="submit" disabled="true">Оновити статус</button>
+                                {% endif %}
+                            </form>
+                            {% if order.status == 'in_progress' or order.status == 'shipped' %}
                                 <form method="post" action="{% url 'admin_orders' %}">
                                     {% csrf_token %}
                                     <input type="hidden" name="order_id" value="{{ order.order_id }}">
-                                    <label for="id_status">Статус:</label>
-                                    <select name="status" id="id_status">
-                                        {% if order.status == 'in_progress' %}
-                                            <option value="in_progress">В обробці</option>
-                                            <option value="shipped">Відправлено</option>
-                                            <option value="canceled">Скасовано</option>
-                                        {% elif order.status == 'shipped' %}
-                                            <option value="shipped">Відправлено</option>
-                                            <option value="delivered">Доставлено</option>
-                                            <option value="canceled">Скасовано</option>
-                                        {% elif order.status == 'delivered' %}
-                                            <option value="delivered">Доставлено</option>
-                                            <option value="canceled">Скасовано</option>
-                                        {% endif %}
-                                    </select>
-                                    <button type="submit">Оновити статус</button>
+                                    <label for="delivery_date">Очікувана дата доставки:</label>
+                                    <input type="date" name="delivery_date" min="{{ order.order_date|date:'Y-m-d' }}">
+                                    <button type="submit">Встановити</button>
                                 </form>
-                                {% if order.status == 'shipped' %}
-                                    <form method="post" action="{% url 'admin_orders' %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="order_id" value="{{ order.order_id }}">
-                                        <label for="delivery_date">Очікувана дата доставки:</label>
-                                        <input type="date" name="delivery_date" min="{{ order.order_date|date:'Y-m-d' }}">
-                                        <button type="submit">Встановити</button>
-                                    </form>
-                                {% endif %}
-                            {% else %}
-                                <p class="canceled-order-label">Замовлення скасоване. Зміна статусу неможлива.</p>
                             {% endif %}
                         </div>
                     {% endfor %}
@@ -103,6 +110,15 @@
             <p>Немає замовлень.</p>
         {% endif %}
     </div>
+    {% if messages %}
+    <div id="popup-message" class="popup-message">
+        <span class="close-btn">&times;</span>
+        {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <script src="{% static 'scripts/popup_messages.js' %}"></script>
 </body>
 </html>
 

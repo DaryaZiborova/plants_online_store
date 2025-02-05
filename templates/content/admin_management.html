@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Управління правами користувачей</title>
-    <link rel="stylesheet" href="{% static 'content/admin_management.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin_management.css' %}">
 </head>
 <body>
     <header>
@@ -38,5 +38,14 @@
         </form>
         <a href="{% url 'user_rights' %}" class="btn-back">&larr; Скасувати</a>
     </div>
+    {% if messages %}
+    <div id="popup-message" class="popup-message">
+        <span class="close-btn">&times;</span>
+        {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <script src="{% static 'scripts/popup_messages.js' %}"></script>
 </body>
 </html>

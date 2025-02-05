@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Магазин Насіння та Саджанців</title>
-    <link rel="stylesheet" href="{% static 'content/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main_page.css' %}">
 </head>
 <body>
     <header>
@@ -19,19 +19,19 @@
             {% if user.is_staff %}
             <div class="admin-tools">
                 <a href="{% url 'user_rights' %}">
-                    <img src="{% static 'content/admin-tools.png' %}" class="admin-tool">
+                    <img src="{% static 'images/admin-tools.png' %}" class="admin-tool">
                 </a>
                 <div class="vertical-line"></div>
                 <a href="{% url 'admin_orders' %}">
-                    <img src="{% static 'content/deliveries.png' %}" class="admin-tool">
+                    <img src="{% static 'images/deliveries.png' %}" class="admin-tool">
                 </a>
                 <div class="vertical-line"></div>
                 <a href="{% url 'statistics_page' %}">
-                    <img src="{% static 'content/statistics.png' %}" class="admin-tool">
+                    <img src="{% static 'images/statistics.png' %}" class="admin-tool">
                 </a>
                 <div class="vertical-line"></div>
                 <a href="{% url 'promocode_management' %}">
-                    <img src="{% static 'content/promocodes.png' %}" class="admin-tool">
+                    <img src="{% static 'images/promocodes.png' %}" class="admin-tool">
                 </a>
             </div>
             {% endif %}
@@ -97,7 +97,7 @@
                     {% if plant.photo %}
                         <img src="{% static 'plants/' %}{{ plant.photo }}" alt="{{ plant.plant_name }}" class="plant-photo">
                     {% else %}
-                        <img src="{% static 'content/placeholder.jpg' %}" alt="{{ plant.plant_name }}" class="plant-photo">
+                        <img src="{% static 'images/placeholder.jpg' %}" alt="{{ plant.plant_name }}" class="plant-photo">
                     {% endif %}
                 </div>
                 <!-- Посилання на сторінку рослини -->
@@ -165,51 +165,15 @@
             <span class="pagination-disabled">Наступна &rarr;</span>
         {% endif %}
     </div>
-
-    <script>
-        document.getElementById('search').addEventListener('input', function (event) {
-        const input = event.target;
-        input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1);
-        });
-
-        document.getElementById('search').addEventListener('input', function() {
-            const query = this.value;
-            console.log("Подія введення спрацювала. Запит:", query);  
-            if (query.length > 2) {  
-                fetch(`/autocomplete/?query=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("Дані автозаповнення:", data);  
-                        const resultsContainer = document.getElementById('autocomplete-results');
-                        resultsContainer.innerHTML = '';  // Очищаємо попередні результати
-                        data.forEach(plant => {
-                            const div = document.createElement('div');
-                            div.textContent = plant.plant_name;
-                            div.addEventListener('click', () => {
-                                document.getElementById('search').value = plant.plant_name;
-                                resultsContainer.innerHTML = '';  // Очищаємо результати після вибору
-                            });
-                            resultsContainer.appendChild(div);
-                        });
-                    })
-                    .catch(error => console.error("Помилка отримання даних автозаповнення:", error));  
-            } else {
-                document.getElementById('autocomplete-results').innerHTML = '';  // Очищаємо результати, якщо запит занадто короткий
-            }
-        });
-        function increment(button) {
-                const input = button.previousElementSibling;
-                input.value = parseInt(input.value) + 1;
-                updatePrice(button.parentElement);
-            }
-    
-        function decrement(button) {
-            const input = button.nextElementSibling;
-            if (parseInt(input.value) > 1) {
-                input.value = parseInt(input.value) - 1;
-                updatePrice(button.parentElement);
-            }
-        }
-    </script>
+    {% if messages %}
+    <div id="popup-message" class="popup-message">
+        <span class="close-btn">&times;</span>
+        {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <script src="{% static 'scripts/main_page.js' %}"></script>
+    <script src="{% static 'scripts/popup_messages.js' %}"></script>
 </body>
 </html>

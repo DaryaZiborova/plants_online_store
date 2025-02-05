@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редагувати рослину</title>
-    <link rel="stylesheet" href="{% static 'content/edit_plant.css' %}">
+    <link rel="stylesheet" href="{% static 'css/edit_plant.css' %}">
 </head>
 <body>
     <div class="container">
@@ -49,12 +49,12 @@
                     </label>
                 {% else %}
                     <label for="photo" class="image-container">
-                        <img id="preview" src="{% static 'content/placeholder.jpg' %}" class="plant-photo">
+                        <img id="preview" src="{% static 'images/placeholder.jpg' %}" class="plant-photo">
                         <div  class="overlay">Завантажити фото</div>
                     </label>
                 {% endif %}
                 <input type="file" id="photo" name="photo" accept="image/*" style="display: none;">
-                <img id="delete" src="{% static 'content/delete.png' %}">
+                <img id="delete" src="{% static 'images/delete.png' %}">
             </div>
             <input type="hidden" id="photo_is_deleted" name="photo_is_deleted" value="false">
             <button type="submit" class="btn-submit">Зберегти зміни</button>
@@ -65,34 +65,6 @@
         </form>
         <a href="{% url 'plant_detail' plant.plant_id %}" class="btn-back">&larr; Скасувати</a>
     </div>
+    <script src="{% static 'scripts/photo_edit.js' %}"></script>
 </body>
 </html>
-<script>
-    const hiddenInput = document.getElementById('photo_is_deleted');
-    // Додаємо слухача подій до поля вибору файлів
-    document.getElementById('photo').addEventListener('change', function(event) {
-        const fileInput = event.target;
-        // Перевіряємо, чи файл був вибраний
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader(); 
-            // Встановлюємо джерело зображення у вибраний файл
-            reader.onload = function(e) {
-                previewImage.src = e.target.result; // Встановлюємо src для попереднього перегляду
-            };
-            // Читаємо файл у форматі Data URL
-            reader.readAsDataURL(fileInput.files[0]);
-            hiddenInput.value = 'false';
-        }
-    });
-    
-    const deleteButton = document.getElementById('delete');
-    const previewImage = document.getElementById('preview');
-    const file = document.getElementById('photo');
-
-    deleteButton.addEventListener('click', function () {
-        previewImage.src = "{% static 'content/placeholder.jpg' %}";
-        file.value = null;
-        hiddenInput.value = 'true';
-    });
-    
-</script>

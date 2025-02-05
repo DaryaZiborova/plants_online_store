@@ -23,7 +23,6 @@ def register_view(request):
             )
             if user:
                 login(request, user) 
-                messages.success(request, 'Ви успішно зареєструвалися та увійшли в систему.')  # Повідомлення про успішну реєстрацію
                 return redirect('main_page')
     else:
         form = RegisterForm()
@@ -46,7 +45,6 @@ def login_by_email(request):
             user = authenticate(request, email=email, password=password)
             if user:
                 login(request, user)
-                messages.success(request, 'Ви успішно увійшли в систему.') 
                 return redirect('main_page')
             else:
                 form.add_error('password', 'Невірний пароль')
@@ -83,7 +81,7 @@ def edit_profile(request):
         user.age = None if request.POST.get('age') == '' else request.POST.get('age')
         user.save()  # Зберігаємо зміни
 
-        messages.success(request, 'Профіль успішно оновлено.')
+        messages.success(request, 'Профіль успішно оновлено!')
         return redirect('user_profile')
 
     return render(request, 'authentication/edit_profile.html', {'user': user})

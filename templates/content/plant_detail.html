@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ plant.plant_name }}</title>
-    <link rel="stylesheet" href="{% static 'content/plant_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'css/plant_detail.css' %}">
 </head>
 <body>
     <header>
@@ -20,7 +20,7 @@
         <div class="plant-detail">
             {% if user.is_staff %}
             <a href="{% url 'update_plant' plant_id=plant.plant_id %}" id="edit-product-link">
-                <img src="{% static 'content/edit_product.png' %}" id="edit-product">
+                <img src="{% static 'images/edit_product.png' %}" id="edit-product">
             </a>
             {% endif %}
             <h1>{{ plant.plant_name }}</h1>
@@ -28,7 +28,7 @@
             {% if plant.photo %}
             <img src="{% static 'plants/' %}{{ plant.photo }}" alt="{{ plant.plant_name }}" class="plant-photo">
             {% else %}
-            <img src="{% static 'content/placeholder.jpg' %}" alt="{{ plant.plant_name }}" class="plant-photo">
+            <img src="{% static 'images/placeholder.jpg' %}" alt="{{ plant.plant_name }}" class="plant-photo">
             {% endif %}
 
         <!-- Інформація про рослину -->
@@ -91,19 +91,14 @@
                 {% endif %}
         </div>
     </div>
-
-    <!-- Скрипт для розрахунку загальної вартості -->
-    <script>
-        // Отримуємо ціну з атрибута data-price
-        const price = parseFloat("{{ plant.price }}".replace(",", "."));  // Замінюємо кому на крапку для коректного парсингу
-        const quantityInput = document.getElementById('quantity');
-        const totalPriceElement = document.getElementById('total-price');
-
-        quantityInput.addEventListener('input', function() {
-            const quantity = parseFloat(this.value);
-            const totalPrice = (price * quantity).toFixed(2);
-            totalPriceElement.textContent = totalPrice;
-        });
-    </script>
+    {% if messages %}
+    <div id="popup-message" class="popup-message">
+        <span class="close-btn">&times;</span>
+        {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <script src="{% static 'scripts/popup_messages.js' %}"></script>
 </body>
 </html>

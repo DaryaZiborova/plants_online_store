@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Замовлення</title>
-    <link rel="stylesheet" href="{% static 'orders/orders.css' %}">
+    <link rel="stylesheet" href="{% static 'css/orders.css' %}">
 </head>
 <body>
     <header>
@@ -20,7 +20,10 @@
     
         {% if orders %}
             {% for order in orders %}
-                <div class="order-block">
+                <div class="order-block"
+                    {% if order.status == 'delivered' %} style="background-color: #eaf1ea;"
+                    {% elif order.status == 'canceled' %} style="background-color: #ffecec;"
+                    {% endif %}>
                     <div class="order-header">
                         <h2>Замовлення №{{ order.order_id }}</h2>
                         <p class="order-date">Дата: {{ order.order_date|date:"d.m.Y" }}</p>
@@ -32,6 +35,8 @@
                             <p style="color: #a5a5a5;"><strong>Замовлення в обробці, очікуйте відправлення.</strong><p>
                             {% elif order.status == 'shipped' %}
                             <p style="color: #4CAF50;"><strong>Доставка очікується {{ order.delivery_date|date:"d.m.Y" }}</strong></p>
+                            {% elif order.status == 'delivered' %}
+                            <p style="color: #4CAF50;"><strong>Замовлення доставлено {{ order.delivery_date|date:"d.m.Y" }}</strong></p>
                             {% else %}
                             <p style="color: red;"><strong>Замовлення скасовано.</strong></p>
                             {% endif %}
@@ -66,6 +71,15 @@
             <p>У вас немає замовлень.</p>
         {% endif %}
     </div>
+    {% if messages %}
+    <div id="popup-message" class="popup-message">
+        <span class="close-btn">&times;</span>
+        {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <script src="{% static 'scripts/popup_messages.js' %}"></script>
 </body>
 </html>
 

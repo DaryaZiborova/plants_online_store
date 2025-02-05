@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Оформлення замовлення</title>
-    <link rel="stylesheet" href="{% static 'orders/orders.css' %}">
+    <link rel="stylesheet" href="{% static 'css/orders.css' %}">
 </head>
 <body>
     <div class="ordering-container">
@@ -85,35 +85,34 @@
         </form>
         <a href="javascript:history.back()" class="btn-back">&larr; Скасувати</a>
     </div>
+    <script>
+        document.getElementById("order-form").addEventListener("submit", function(event) {
+            event.preventDefault(); 
+            let formData = new FormData(this);
+            
+            fetch("{% url 'place_order' %}", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.download_url) {
+                    let downloadLink = document.createElement("a");
+                    downloadLink.href = data.download_url;
+                    downloadLink.download = "";  
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url;
+                    }, 1000);
+                }
+            })
+        });
+    </script>
 </body>
 
-<script>
-    document.getElementById("order-form").addEventListener("submit", function(event) {
-        event.preventDefault(); 
-    
-        let formData = new FormData(this);
-        
-        fetch("{% url 'place_order' %}", {
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}"
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.download_url) {
-                let downloadLink = document.createElement("a");
-                downloadLink.href = data.download_url;
-                downloadLink.download = "";  
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-
-                setTimeout(() => {
-                    window.location.href = data.redirect_url;
-                }, 1000);
-            }
-        })
-    });
-</script>

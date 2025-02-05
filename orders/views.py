@@ -6,11 +6,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from datetime import datetime
 from .documents import generate_pdf_receipt
 from django.http import JsonResponse
+from django.utils import timezone
 
 # Додавання товару до кошика
 def add_to_cart(request, plant_id, q):
     if not request.user.is_authenticated:
-        messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб додати товар до кошика.')
+        messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб додати товар до кошика')
         return redirect(request.META.get('HTTP_REFERER')) 
 
     q = int(q)
@@ -60,7 +61,7 @@ def cart_view(request):
 # Сторінка оформлення замовлення
 def ordering_page(request):
     if not request.user.is_authenticated:
-        messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб купити.')
+        messages.warning(request, 'Будь ласка, увійдіть в аккаунт, щоб купити товар')
         referer = request.META.get('HTTP_REFERER') or '/'  
         return redirect(referer)
     plant_id = request.GET.get('plant_id')
@@ -81,9 +82,6 @@ def ordering_page(request):
     else:
         # Якщо це звичайне оформлення замовлення з кошика
         cart_items = CartItem.objects.filter(user=request.user)
-        if not cart_items:
-            messages.warning(request, 'Ваш кошик порожній!')
-            return redirect('cart')  # Перенаправлення на кошик, якщо він порожній
         total = sum(item.items_quantity * item.plant.price for item in cart_items)
 
     return render(request, 'orders/ordering_page.html', {
@@ -142,8 +140,6 @@ def place_order(request):
             )
             order.total_price = plant.price
 
-            messages.success(request, 'Замовлення успішно оформлено!')
-
         # Якщо це звичайне оформлення замовлення з кошика
         else:
             cart_items = CartItem.objects.filter(user=request.user)
@@ -158,13 +154,13 @@ def place_order(request):
                 )
             # Очищаємо кошик після оформлення замовлення
             cart_items.delete()
-
-            messages.success(request, 'Замовлення успішно оформлено!')
+            
         if discount == 0:
             order.discounted_total_price = order.total_price
         else:
             order.discounted_total_price = round(order.total_price * (100-order.discount) / 100, 2)
         order.save()
+        messages.success(request, 'Замовлення успішно оформлено!')
 
         return JsonResponse({"download_url": f"/download_receipt/{order.order_id}/", "redirect_url": "/orders/"})
 
@@ -187,11 +183,11 @@ def admin_orders(request):
                 delivery_date_parsed = datetime.strptime(delivery_date, "%Y-%m-%d")
                 order.delivery_date = delivery_date_parsed
                 order.save()
-                messages.success(request, "Очікувану дату доставки встановлено.")
+                messages.success(request, "Очікувану дату доставки успiшно встановлено!")
             
             if 'status' in request.POST:
                 new_status = request.POST.get('status')
-                if order.status == 'in_progress' and new_status == 'shipped':
+                if new_status == 'shipped':
                     for item in order.items.all():
                         plant = item.plant
                         if plant.quantity_in_stock < item.quantity:
@@ -199,12 +195,14 @@ def admin_orders(request):
                             return redirect('admin_orders')
                         plant.quantity_in_stock -= item.quantity
                         plant.save()
-                    #order.delivery_date = now
+                elif new_status == 'delivered':
+                    order.delivery_date = timezone.now()
                 elif new_status == 'canceled':
                     order.delivery_date = None  # Очистка даты доставки
                     messages.success(request, "Замовлення скасовано.")
                 order.status = new_status
                 order.save()
+                messages.success(request, "Статус замовлення успішно змінено.")
 
         except Exception as e:
             messages.error(request, f"Помилка: {str(e)}")
@@ -229,7 +227,7 @@ def promocode_management(request):
         promocode = request.POST.get('promocode').strip()
         discount_value = request.POST.get('discount_value')
         if Promocode.objects.filter(promocode=promocode).exists():
-            messages.error(request, "Цей промокод вже існує")
+            messages.error(request, "Додати не вийшло. Цей промокод вже існує.")
         else:
             Promocode.objects.create(promocode=promocode, discount_value=discount_value)
 
