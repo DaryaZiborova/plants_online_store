@@ -2,7 +2,9 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-image: url("/static/images/background.jpg");
+    background-color: rgba(255, 255, 255, 0.5);
+    background-blend-mode: overlay;
 }
 
 header {
@@ -46,7 +48,7 @@ header {
     padding: 20px;
     background-color: white;
     border-radius: 5px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 6px 6px 10px 6px rgba(0, 0, 0, 0.2);
 }
 
 h1 {

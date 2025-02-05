@@ -3,10 +3,6 @@ body, html {
     padding: 0;
     font-family: Arial, sans-serif;
     overflow-x: hidden; 
-    background-color: #f9f9f9;
-    background-image: url("/static/images/background.jpg");
-    background-color: rgba(255, 255, 255, 0.5);
-    background-blend-mode: overlay;
 }
 
 header {
@@ -91,11 +87,14 @@ header {
 }
 
 .sidebar {
-    background-color: rgba(255, 255, 255, 0.75);
+    background-image: url("/static/images/background.jpg");
+    background-color: rgba(255, 255, 255, 0.7);
+    background-blend-mode: overlay;
     width: 15%;
     box-shadow: 0px 4px 10px 4px rgba(0, 0, 0, 0.12);
     padding: 20px;
     border: none; 
+    border-radius: 6px;
 }
 
 .sidebar h3 {
@@ -174,7 +173,7 @@ header {
 }
 
 .plant-link:hover {
-    color: rgb(0, 72, 255);
+    color: #0045b3;
 }
 
 .sidebar ul li a.active {
@@ -391,4 +390,32 @@ input[type="checkbox"] {
     right: 10px;
     font-size: 24px;
     cursor: pointer;
+}
+
+#add-plant-label{
+    font-size: 28px;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    margin-top: 100px;
+    color: #333;
+}
+#plus{
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    border-radius: 100%;
+    background-color: #4CAF50;
+    width: 30px;
+    padding: 10px 12px 10px 12px;
+    color: white;
+    font-size: 32px;
+}
+#plus:hover{
+    background-color: #45a049;
+}
+#add-plant-label:hover{
+    color: #0045b3;
 }

@@ -9,3 +9,7 @@ def get_item(dictionary, key):
 @register.filter
 def kilo_to_grams(value):
     return round(value * 1000)
+
+@register.filter
+def multiply(num1, num2):
+    return round(num1 * num2, 2)

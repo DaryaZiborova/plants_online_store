@@ -70,12 +70,14 @@ def ordering_page(request):
     if buy_now and plant_id:
         # Якщо це "Купити зараз", створюємо тимчасовий кошик з одним товаром
         plant = get_object_or_404(Plant, plant_id=plant_id)
-        if plant.quantity_in_stock < 1:
-            return redirect('main_page')  # Перенаправлення на головну сторінку
-
+        
+        if CartItem.objects.filter(user=request.user, plant=plant):
+            q = CartItem.objects.filter(user=request.user, plant=plant).first().items_quantity 
+        else:
+            q = 1
         cart_items = [{
             "plant": plant,
-            "items_quantity": 1,
+            "items_quantity": q,
             "total_price": plant.price
         }]
         total = plant.price
@@ -110,7 +112,6 @@ def place_order(request):
         if promocode in PROMOCODES:
             discount = PROMOCODES.get(promocode, 0)
         else:
-            promocode = None
             discount = 0
         # Створюємо нове замовлення
         order = Order.objects.create(
@@ -129,16 +130,18 @@ def place_order(request):
         # Якщо це "Купити зараз", отримуємо товар з параметрів запиту
         if buy_now:
             plant_id = request.POST.get('plant_id')
+            q = int(request.POST.get('quantity'))
             plant = get_object_or_404(Plant, plant_id=plant_id)
 
             # Додаємо товар до замовлення
             OrderItem.objects.create(
                 order=order,
                 plant=plant,
-                quantity=1,
-                price=plant.price
+                quantity=q,
+                price=plant.price*q,
             )
-            order.total_price = plant.price
+            order.total_price = plant.price * q
+            CartItem.objects.filter(user=request.user, plant=plant).delete()
 
         # Якщо це звичайне оформлення замовлення з кошика
         else:

@@ -86,7 +86,9 @@
             {% if user.is_staff %}
                 {% if request.GET.p|default:"1" == "1" %}
             <div class="product">
-                <a href="{% url 'create_plant' %}">add</a>
+                <a href="{% url 'create_plant' %}" class="add-plant" id="add-plant-label">Додати нову рослину</a>
+                <br>
+                <a href="{% url 'create_plant' %}" class="add-plant" id="plus">+</a>
             </div>
                 {% endif %}
             {% endif %}

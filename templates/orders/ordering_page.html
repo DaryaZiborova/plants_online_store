@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="uk">
 {% load static %}
+{% load filters %}
 <head>
     <meta charset="UTF-8">
     <title>Оформлення замовлення</title>
@@ -14,7 +15,7 @@
             <!-- Приховані поля для передачі параметрів -->
             <input type="hidden" name="buy_now" {% if buy_now %} value="true" {% else %} value="false" {% endif %}>
             {% if buy_now %}
-                <input type="hidden" name="plant_id" value="{{ cart_items.0.plant.plant_id }}">
+            <input type="hidden" name="plant_id" value="{{ cart_items.0.plant.plant_id }}">
             {% endif %}
         
             <div class="form-group">
@@ -47,39 +48,35 @@
             <div class="order-items">
                 <h3>Товари:</h3>
                 <ul>
-                    {% if buy_now %}
-                        <!-- Відображаємо товар, який купується зараз -->
-                        <li>
-                            <div class="item-info">
-                                {% if cart_items.0.plant.photo %}
-                                    <img class="plant-img" src="{% static 'plants/' %}{{ cart_items.0.plant.photo }}" alt="{{ cart_items.0.plant.plant_name }}">
-                                {% else %}
-                                    <div class="empty-frame"></div>
-                                {% endif %}
-                                <span class="item-name">{{ cart_items.0.plant.plant_name }}</span>
-                            </div>
-                            <span class="item-quantity">1 шт.</span>
-                            <span class="item-price">{{ cart_items.0.plant.price }} грн</span>
-                        </li>
-                    {% else %}
-                        <!-- Відображаємо товари з кошика -->
-                        {% for item in cart_items %}
-                            <li>
-                                <div class="item-info">
-                                    {% if item.plant.photo %}
-                                        <img class="plant-img" src="{% static 'plants/' %}{{ item.plant.photo }}" alt="{{ item.plant.plant_name }}">
-                                    {% else %}
-                                        <div class="empty-frame"></div>
-                                    {% endif %}
-                                    <span class="item-name">{{ item.plant.plant_name }}</span>
-                                </div>
-                                <span class="item-quantity">{{ item.items_quantity }} шт.</span>
-                                <span class="item-price">{{ item.plant.price }} грн</span>
-                            </li>
-                        {% endfor %}
-                    {% endif %}
+                <!-- Відображаємо товари з кошика -->
+                {% for item in cart_items %}
+                    <li>
+                        <div class="item-info">
+                            {% if item.plant.photo %}
+                                <img class="plant-img" src="{% static 'plants/' %}{{ item.plant.photo }}" alt="{{ item.plant.plant_name }}">
+                            {% else %}
+                                <div class="empty-frame"></div>
+                            {% endif %}
+                            <span class="item-name">{{ item.plant.plant_name }}</span>
+                        </div>
+                        {% if buy_now %}
+                        <div class="quantity-control">
+                            <button type="button" class="quantity-btn" id="decrement" disabled>-</button>
+                            <input id="quantity" name="quantity" type="number" value="{{ item.items_quantity }}" min="1" max="{{ item.plant.quantity_in_stock }}" readonly>
+                            {% if item.quantity >= item.plant.quantity_in_stock %}
+                            <button type="button" class="quantity-btn" id="increment" disabled>+</button>
+                            {% else %}
+                            <button type="button" class="quantity-btn" id="increment">+</button>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <span class="item-quantity">{{ item.items_quantity }} шт.</span>
+                        {% endif %}
+                        <span id="item-price" class="item-price">{{ item.plant.price|multiply:item.items_quantity }} грн</span>
+                    </li>
+                {% endfor %}
                 </ul>
-                <p class="order-total"><strong>Загальна сума:</strong> {{ total }} грн</p>
+                <p class="order-total" id="order-total">Загальна сума: {{ total }} грн</p>
             </div>
             <button type="submit" class="btn-submit">Підтвердити замовлення</button>
         </form>
@@ -114,5 +111,6 @@
             })
         });
     </script>
+    <script src="{% static 'scripts/change_quantity.js' %}"></script>
 </body>
 
